@@ -1,6 +1,6 @@
 # CraftMeme 🚀
 
-Welcome to MemeCoin Launchpad, a decentralized platform where users can create and launch their own ERC-20 memecoins, provide liquidity via Uniswap, and enjoy safe, controlled token vesting to avoid rugpulls and scams. This project was built for the QuickNode Hackathon and uses QuickNode Functions to streamline operations and ensure smooth user experience.
+Welcome to MemeCoin Launchpad, a decentralized platform where users can create and launch their own ERC-20 memecoins, provide liquidity via Uniswap, and enjoy safe, controlled token vesting to minimize potential bad actors in the space. This project was built for the QuickNode Hackathon and uses QuickNode Functions to streamline operations and ensure smooth user experience.
 
 <p align="center">
 <img src="./CraftMeme.webp" width="500" alt="Name">
