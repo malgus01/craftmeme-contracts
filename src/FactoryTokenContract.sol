@@ -145,7 +145,6 @@ contract FactoryTokenContract is Ownable {
         // Fetch the pending transaction details
         TxData memory txData = txArray[_txId];
         require(txData.isPending, TransactionAlreadyExecuted());
-
         _createMemecoin(_txId);
     }
 
