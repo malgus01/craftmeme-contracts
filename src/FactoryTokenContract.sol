@@ -1,5 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
+
+import { TokenContract } from "./TokenContract.sol";
+import { MultiSigContract } from "./MultiSigContract.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
 /**
  * @title FactoryTokenContract.
  * @author CraftMeme.
@@ -7,10 +12,16 @@ pragma solidity 0.8.26;
  * @dev This means past signed txs data is available in this contract for more functions
  * after tx is executed.
  */
-import {TokenContract} from "./TokenContract.sol";
-import {MultiSigContract} from "./MultiSigContract.sol";
+contract FactoryTokenContract is Ownable {
+    //error
+    error NotAuthorized();
+    error TransactionAlreadyExecuted();
+    error InvalidSignerCount();
+    error InvalidSupply();
+    error EmptyName();
+    error EmptySymbol();
 
-contract FactoryTokenContract {
+    //variables
     uint256 TX_ID;
     MultiSigContract public multiSigContract;
 
@@ -22,12 +33,25 @@ contract FactoryTokenContract {
         string tokenName;
         string tokenSymbol;
         uint256 totalSupply;
+        uint256 maxSupply;
+        bool canMint;
+        bool canBurn;
+        bool supplyCapEnabled;
     }
 
     TxData[] public txArray;
     mapping(address => uint256) public ownerToTxId;
+    mapping(address => TokenContract[]) public ownerToTokens;
 
-    constructor(address _multiSigContract) {
+    event TransactionQueued(
+        uint256 indexed txId, address indexed owner, address[] signers, string tokenName, string tokenSymbol
+    );
+
+    event MemecoinCreated(
+        address indexed owner, address indexed tokenAddress, string indexed name, string symbol, uint256 supply
+    );
+
+    constructor(address _multiSigContract, address initialOwner) Ownable(initialOwner) {
         multiSigContract = MultiSigContract(_multiSigContract);
         TxData memory constructorTx = TxData({
             txId: 0,
@@ -36,7 +60,11 @@ contract FactoryTokenContract {
             isPending: true,
             tokenName: "",
             tokenSymbol: "",
-            totalSupply: 0
+            totalSupply: 0,
+            maxSupply: 0,
+            canMint: false,
+            canBurn: false,
+            supplyCapEnabled: false
         });
         txArray.push(constructorTx);
         ownerToTxId[address(0)] = 0;
@@ -58,8 +86,23 @@ contract FactoryTokenContract {
         address _owner,
         string memory _tokenName,
         string memory _tokenSymbol,
-        uint256 _totalSupply
-    ) external returns (uint256 txId) {
+        uint256 _totalSupply,
+        uint256 _maxSupply,
+        bool _canMint,
+        bool _canBurn,
+        bool _supplyCapEnabled
+    )
+        external
+        returns (uint256 txId)
+    {
+        require(_signers.length >= 2, InvalidSignerCount());
+        require(bytes(_tokenName).length > 0, EmptyName());
+        require(bytes(_tokenSymbol).length > 0, EmptySymbol());
+        require(_totalSupply > 0, InvalidSupply());
+        if (_supplyCapEnabled) {
+            require(_maxSupply >= _totalSupply, InvalidSupply());
+        }
+
         TxData memory tempTx = TxData({
             txId: TX_ID,
             owner: _owner,
@@ -67,11 +110,18 @@ contract FactoryTokenContract {
             isPending: true,
             tokenName: _tokenName,
             tokenSymbol: _tokenSymbol,
-            totalSupply: _totalSupply
+            totalSupply: _totalSupply,
+            maxSupply: _maxSupply,
+            canMint: _canMint,
+            canBurn: _canBurn,
+            supplyCapEnabled: _supplyCapEnabled
         });
         txArray.push(tempTx);
         ownerToTxId[_owner] = TX_ID;
-        multiSigContract.queueTx(txArray[TX_ID].txId, _owner, _signers);
+        multiSigContract.queueTx(TX_ID, _owner, _signers);
+
+        emit TransactionQueued(TX_ID, _owner, _signers, _tokenName, _tokenSymbol);
+
         txId = TX_ID;
         TX_ID += 1;
     }
@@ -81,5 +131,48 @@ contract FactoryTokenContract {
      * @notice Memecoin has been created when this function is called.
      * @dev This function is only callable by the MultiSigContract.
      */
-    function executeCreateMemecoin(uint256 _txId) public {}
+    function executeCreateMemecoin(uint256 _txId) public {
+        // Ensure only the MultiSigContract can call this function
+        require(msg.sender == address(multiSigContract), NotAuthorized());
+
+        // Fetch the pending transaction details
+        TxData memory txData = txArray[_txId];
+        require(txData.isPending, TransactionAlreadyExecuted());
+
+        // Deploy new TokenContract for the memecoin
+        TokenContract newToken = new TokenContract(
+            txData.owner,
+            txData.tokenName,
+            txData.tokenSymbol,
+            txData.totalSupply,
+            txData.maxSupply,
+            txData.canMint,
+            txData.canBurn,
+            txData.supplyCapEnabled
+        );
+
+        txArray[_txId].isPending = false;
+        ownerToTokens[txData.owner].push(newToken);
+
+        // Emit the MemecoinCreated event
+        emit MemecoinCreated(txData.owner, address(newToken), txData.tokenName, txData.tokenSymbol, txData.totalSupply);
+    }
+
+    /**
+     * @notice Gets all tokens owned by an address
+     * @param _owner Address to check
+     * @return TokenContract[] Array of token contracts
+     */
+    function getTokensByOwner(address _owner) external view returns (TokenContract[] memory) {
+        return ownerToTokens[_owner];
+    }
+
+    /**
+     * @notice Gets the tx data of a transaction
+     * @param _txId data of the transaction
+     * @return TxData memory
+     */
+    function getTransaction(uint256 _txId) external view returns (TxData memory) {
+        return txArray[_txId];
+    }
 }
