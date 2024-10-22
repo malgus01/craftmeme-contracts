@@ -5,16 +5,26 @@ import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ERC20Pausable } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 
+/**
+ * @title TokenContract
+ * @author CraftMeme
+ * @dev Implementation of a customizable ERC20 token with minting, burning, and pausable capabilities.
+ * This contract extends OpenZeppelin's ERC20, ERC20Pausable, and Ownable contracts.
+ */
 contract TokenContract is ERC20, ERC20Pausable, Ownable {
+    // Errors
     error MintingIsDisabled();
     error BurningIsDisabled();
     error MaxSupplyReached();
 
-    uint256 public initialSupply;
-    uint256 public maxSupply;
-    bool public supplyCapEnabled;
-    bool public canMint;
-    bool public canBurn;
+    uint256 private initialSupply;
+    uint256 private maxSupply;
+    bool private supplyCapEnabled;
+    bool private canMint;
+    bool private canBurn;
+
+    event Mint(address indexed from, uint256 indexed amount);
+    event Burn(address indexed from, uint256 indexed amount);
 
     constructor(
         address initialOwner,
@@ -44,12 +54,14 @@ contract TokenContract is ERC20, ERC20Pausable, Ownable {
             require(totalSupply() + amount <= maxSupply, MaxSupplyReached());
         }
         _mint(to, amount);
+        emit Mint(to, amount);
     }
 
     // Burn function
     function burn(uint256 amount) external {
         require(canBurn, BurningIsDisabled());
         _burn(msg.sender, amount);
+        emit Burn(msg.sender, amount);
     }
 
     function pause() public onlyOwner {
