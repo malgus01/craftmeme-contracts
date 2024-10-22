@@ -1,5 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
+
+import { TokenContract } from "./TokenContract.sol";
+import { MultiSigContract } from "./MultiSigContract.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
 /**
  * @title FactoryTokenContract.
  * @author CraftMeme.
@@ -7,11 +12,6 @@ pragma solidity 0.8.26;
  * @dev This means past signed txs data is available in this contract for more functions
  * after tx is executed.
  */
-
-import { TokenContract } from "./TokenContract.sol";
-import { MultiSigContract } from "./MultiSigContract.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-
 contract FactoryTokenContract is Ownable {
     //error
     error NotAuthorized();
@@ -165,5 +165,14 @@ contract FactoryTokenContract is Ownable {
      */
     function getTokensByOwner(address _owner) external view returns (TokenContract[] memory) {
         return ownerToTokens[_owner];
+    }
+
+    /**
+     * @notice Gets the tx data of a transaction
+     * @param _txId data of the transaction
+     * @return TxData memory
+     */
+    function getTransaction(uint256 _txId) external view returns (TxData memory) {
+        return txArray[_txId];
     }
 }
