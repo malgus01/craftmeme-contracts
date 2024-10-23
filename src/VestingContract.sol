@@ -3,9 +3,10 @@ pragma solidity 0.8.26;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./LiquidityManager.sol";
 
 /**
- * @title TokenVesting
+ * @title VestingContract
  * @author CraftMeme
  * @dev A token vesting contract that will release tokens over time to beneficiaries.
  */
@@ -19,6 +20,7 @@ contract VestingContract is Ownable {
     using SafeERC20 for IERC20;
 
     IERC20 private immutable memeToken;
+    LiquidityManager public liquidityManager;
 
     struct VestingSchedule {
         uint256 start;
@@ -32,6 +34,11 @@ contract VestingContract is Ownable {
 
     event TokensReleased(address indexed beneficiary, uint256 indexed amount);
     event VestingRevoked(address indexed beneficiary);
+
+    modifier onlyLiquidityManager() {
+        require(msg.sender == address(liquidityManager), "Not authorized");
+        _;
+    }
 
     constructor(address InitialOwner, IERC20 _memeToken) Ownable(InitialOwner) {
         memeToken = _memeToken;
