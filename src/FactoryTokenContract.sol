@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {TokenContract} from "./TokenContract.sol";
-import {MultiSigContract} from "./MultiSigContract.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { TokenContract } from "./TokenContract.sol";
+import { MultiSigContract } from "./MultiSigContract.sol";
+import { LiquidityManager } from "./LiquidityManager.sol";
 
 /**
  * @title FactoryTokenContract.
@@ -20,8 +21,8 @@ contract FactoryTokenContract is Ownable {
     error EmptyName();
     error EmptySymbol();
 
-    uint256 TX_ID;
     MultiSigContract public multiSigContract;
+    LiquidityManager public liquidityManager;
 
     struct TxData {
         uint256 txId;
@@ -38,30 +39,21 @@ contract FactoryTokenContract is Ownable {
     }
 
     TxData[] public txArray;
+    uint256 TX_ID;
+    address private USDC_ADDRESS;
     mapping(address => uint256) public ownerToTxId;
     mapping(address => TokenContract[]) public ownerToTokens;
 
     event TransactionQueued(
-        uint256 indexed txId,
-        address indexed owner,
-        address[] signers,
-        string tokenName,
-        string tokenSymbol
+        uint256 indexed txId, address indexed owner, address[] signers, string tokenName, string tokenSymbol
     );
 
     event MemecoinCreated(
-        address indexed owner,
-        address indexed tokenAddress,
-        string indexed name,
-        string symbol,
-        uint256 supply
+        address indexed owner, address indexed tokenAddress, string indexed name, string symbol, uint256 supply
     );
 
     modifier onlyMultiSigContract() {
-        require(
-            msg.sender == address(multiSigContract),
-            FactoryTokenContract__onlyMultiSigContract()
-        );
+        require(msg.sender == address(multiSigContract), FactoryTokenContract__onlyMultiSigContract());
         _;
     }
 
@@ -70,11 +62,9 @@ contract FactoryTokenContract is Ownable {
         _;
     }
 
-    constructor(
-        address _multiSigContract,
-        address initialOwner
-    ) Ownable(initialOwner) {
+    constructor(address _multiSigContract, address _liquidityManager, address initialOwner) Ownable(initialOwner) {
         multiSigContract = MultiSigContract(_multiSigContract);
+        liquidityManager = LiquidityManager(_liquidityManager);
         TxData memory constructorTx = TxData({
             txId: 0,
             owner: address(0),
@@ -113,7 +103,10 @@ contract FactoryTokenContract is Ownable {
         bool _canMint,
         bool _canBurn,
         bool _supplyCapEnabled
-    ) external returns (uint256 txId) {
+    )
+        external
+        returns (uint256 txId)
+    {
         require(_signers.length >= 2, InvalidSignerCount());
         require(bytes(_tokenName).length > 0, EmptyName());
         require(bytes(_tokenSymbol).length > 0, EmptySymbol());
@@ -122,15 +115,7 @@ contract FactoryTokenContract is Ownable {
             require(_maxSupply >= _totalSupply, InvalidSupply());
         }
         txId = _handleQueue(
-            _signers,
-            _owner,
-            _tokenName,
-            _tokenSymbol,
-            _totalSupply,
-            _maxSupply,
-            _canMint,
-            _canBurn,
-            _supplyCapEnabled
+            _signers, _owner, _tokenName, _tokenSymbol, _totalSupply, _maxSupply, _canMint, _canBurn, _supplyCapEnabled
         );
     }
 
@@ -139,9 +124,7 @@ contract FactoryTokenContract is Ownable {
      * @notice Memecoin has been created when this function is called.
      * @dev This function is only callable by the MultiSigContract.
      */
-    function executeCreateMemecoin(
-        uint256 _txId
-    ) public onlyMultiSigContract onlyPendigTx(_txId) {
+    function executeCreateMemecoin(uint256 _txId) public onlyMultiSigContract onlyPendigTx(_txId) {
         // Fetch the pending transaction details
         TxData memory txData = txArray[_txId];
         require(txData.isPending, TransactionAlreadyExecuted());
@@ -153,9 +136,7 @@ contract FactoryTokenContract is Ownable {
      * @param _owner Address to check
      * @return TokenContract[] Array of token contracts
      */
-    function getTokensByOwner(
-        address _owner
-    ) external view returns (TokenContract[] memory) {
+    function getTokensByOwner(address _owner) external view returns (TokenContract[] memory) {
         return ownerToTokens[_owner];
     }
 
@@ -178,7 +159,10 @@ contract FactoryTokenContract is Ownable {
         bool _canMint,
         bool _canBurn,
         bool _supplyCapEnabled
-    ) internal returns (uint256 txId) {
+    )
+        internal
+        returns (uint256 txId)
+    {
         TxData memory tempTx = TxData({
             txId: TX_ID,
             owner: _owner,
@@ -195,13 +179,7 @@ contract FactoryTokenContract is Ownable {
         txArray.push(tempTx);
         ownerToTxId[_owner] = TX_ID;
         multiSigContract.queueTx(TX_ID, _owner, _signers);
-        emit TransactionQueued(
-            TX_ID,
-            _owner,
-            _signers,
-            _tokenName,
-            _tokenSymbol
-        );
+        emit TransactionQueued(TX_ID, _owner, _signers, _tokenName, _tokenSymbol);
         txId = TX_ID;
         TX_ID += 1;
     }
@@ -220,16 +198,28 @@ contract FactoryTokenContract is Ownable {
             txData.supplyCapEnabled
         );
 
+        // Initialize the pool for the newly created token
+        liquidityManager.initializePool(
+            address(newToken),
+            address(USDC_ADDRESS), // USDT/USDC address
+            300, // swap fee (Uniswap's fee tiers: 0.01%->100, 0.05%->500, 0.3%->3000, 1%->10000)
+            60, // tick spacing (depends on fee tier: 0.01%->1, 0.05%->10, 0.3%->60, 1%->200)
+            79_228_162_514_264_337_593_543_950_336 // 0.0001 starting price (Q64.96 format)
+        );
+
         txArray[_txId].isPending = false;
         ownerToTokens[txData.owner].push(newToken);
 
         // Emit the MemecoinCreated event
-        emit MemecoinCreated(
-            txData.owner,
-            address(newToken),
-            txData.tokenName,
-            txData.tokenSymbol,
-            txData.totalSupply
-        );
+        emit MemecoinCreated(txData.owner, address(newToken), txData.tokenName, txData.tokenSymbol, txData.totalSupply);
+    }
+
+    // Function to update LiquidityManager address, if needed
+    function updateLiquidityManager(address _liquidityManager) external onlyOwner {
+        liquidityManager = LiquidityManager(_liquidityManager);
+    }
+
+    function getUSDCAddress() public view returns (address) {
+        return USDC_ADDRESS;
     }
 }
