@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.10;
 
-import {Test, console2} from "forge-std/Test.sol";
-import {StdCheats} from "forge-std/StdCheats.sol";
-import {Script} from "forge-std/Script.sol";
-import {HelperConfig} from "../../../script/HelperConfig.s.sol";
-import {MultiSigContract} from "../../../src/MultiSigContract.sol";
-import {FactoryTokenContract} from "../../../src/FactoryTokenContract.sol";
+import { Test, console2 } from "forge-std/Test.sol";
+import { StdCheats } from "forge-std/StdCheats.sol";
+import { Script } from "forge-std/Script.sol";
+import { HelperConfig } from "../../../script/HelperConfig.s.sol";
+import { MultiSigContract } from "../../../src/MultiSigContract.sol";
+import { FactoryTokenContract } from "../../../src/FactoryTokenContract.sol";
+import { LiquidityManager } from "../../../src/LiquidityManager.sol";
 
 contract MultiSigContractTest is StdCheats, Test, Script {
     MultiSigContract public msc;
+    LiquidityManager public lm;
     HelperConfig public hc;
     FactoryTokenContract public ftc;
     address public owner = address(1);
@@ -20,24 +22,14 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         vm.startPrank(owner);
         hc = new HelperConfig();
         msc = new MultiSigContract();
-        ftc = new FactoryTokenContract(address(msc), owner);
+        ftc = new FactoryTokenContract(address(msc), address(lm), owner);
 
         msc.setFactoryTokenContract(address(ftc));
 
         address[] memory signers = new address[](2);
         signers[0] = owner;
         signers[1] = notOwner;
-        txId = ftc.queueCreateMemecoin(
-            signers,
-            owner,
-            "Memecoin",
-            "MEM",
-            1000000,
-            1000000,
-            true,
-            true,
-            true
-        );
+        txId = ftc.queueCreateMemecoin(signers, owner, "Memecoin", "MEM", 1_000_000, 1_000_000, true, true, true);
         vm.stopPrank();
     }
 
@@ -66,7 +58,7 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         assertEq(temp, notOwner);
     }
 
-    function testUnsignTx() public {}
+    function testUnsignTx() public { }
 
     function testExecuteTx() public {
         vm.prank(owner);

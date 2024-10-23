@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.10;
 
-import {Script} from "forge-std/Script.sol";
-import {console} from "forge-std/Test.sol";
+import { Script } from "forge-std/Script.sol";
+import { console } from "forge-std/Test.sol";
 
 /**
  * uint256 _CIP,
@@ -27,21 +27,13 @@ contract HelperConfig is Script {
 
     NetworkConfig public ActiveConfig;
 
-    constructor() {}
+    constructor() { }
 
-    function getOptimismMainnetConfig()
-        public
-        view
-        returns (NetworkConfig memory)
-    {
+    function getOptimismMainnetConfig() public view returns (NetworkConfig memory) {
         console.log("Wotking on optimism mainnet now....");
         NetworkConfig memory mainnetConfig = NetworkConfig({
-            priceFeed: vm.envAddress(
-                "OPTIMISM_MAINNET_INRUSD_PRICEFEED_ADDRESS"
-            ),
-            priceFeed2: vm.envAddress(
-                "OPTIMISM_MAINNET_ETHUSD_PRICEFEED_ADDRESS"
-            ),
+            priceFeed: vm.envAddress("OPTIMISM_MAINNET_INRUSD_PRICEFEED_ADDRESS"),
+            priceFeed2: vm.envAddress("OPTIMISM_MAINNET_ETHUSD_PRICEFEED_ADDRESS"),
             baseRiskRate: BASE_RISK_RATE,
             riskPremiumRate: RISK_PREMIUM_RATE,
             cip: CIP
@@ -49,17 +41,11 @@ contract HelperConfig is Script {
         return mainnetConfig;
     }
 
-    function getOptimismSepoliaConfig()
-        public
-        view
-        returns (NetworkConfig memory)
-    {
+    function getOptimismSepoliaConfig() public view returns (NetworkConfig memory) {
         console.log("Working on optimism sepolia now....");
         NetworkConfig memory sepoliaConfig = NetworkConfig({
             priceFeed: address(0),
-            priceFeed2: vm.envAddress(
-                "OPTIMISM_SEPOLIA_ETHUSD_PRICEFEED_ADDRESS"
-            ),
+            priceFeed2: vm.envAddress("OPTIMISM_SEPOLIA_ETHUSD_PRICEFEED_ADDRESS"),
             baseRiskRate: BASE_RISK_RATE,
             riskPremiumRate: RISK_PREMIUM_RATE,
             cip: CIP
