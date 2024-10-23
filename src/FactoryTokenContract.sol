@@ -201,10 +201,10 @@ contract FactoryTokenContract is Ownable {
         // Initialize the pool for the newly created token
         liquidityManager.initializePool(
             address(newToken),
-            address(USDC_ADDRESS), // Replace with your USDT/USDC address
-            500, // Example swap fee (Uniswap's fee tiers: 100, 500, 3000, 10000)
-            10, // Example tick spacing (depends on fee tier)
-            79_228_162_514_264_337_593_543_950_336 // Example starting price (Q64.96 format)
+            address(USDC_ADDRESS), // USDT/USDC address
+            300, // swap fee (Uniswap's fee tiers: 0.01%->100, 0.05%->500, 0.3%->3000, 1%->10000)
+            60, // tick spacing (depends on fee tier: 0.01%->1, 0.05%->10, 0.3%->60, 1%->200)
+            79_228_162_514_264_337_593_543_950_336 // 0.0001 starting price (Q64.96 format)
         );
 
         txArray[_txId].isPending = false;
