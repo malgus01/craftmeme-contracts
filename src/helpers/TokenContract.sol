@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ERC20Pausable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { ERC20Pausable } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 
 /**
  * @title TokenContract
@@ -74,7 +74,10 @@ contract TokenContract is ERC20, ERC20Pausable, Ownable {
         bool _canMint,
         bool _canBurn,
         bool _supplyCapEnabled
-    ) ERC20(tokenName, tokenSymbol) Ownable(initialOwner) {
+    )
+        ERC20(tokenName, tokenSymbol)
+        Ownable(initialOwner)
+    {
         initialSupply = _initialSupply;
         maxSupply = _maxSupply;
         canMint = _canMint;
@@ -152,11 +155,7 @@ contract TokenContract is ERC20, ERC20Pausable, Ownable {
      * @param to The address to which tokens are being transferred.
      * @param value The amount of tokens being transferred.
      */
-    function _update(
-        address from,
-        address to,
-        uint256 value
-    ) internal override(ERC20, ERC20Pausable) {
+    function _update(address from, address to, uint256 value) internal override(ERC20, ERC20Pausable) {
         super._update(from, to, value);
     }
 }
