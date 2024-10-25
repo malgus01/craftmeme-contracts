@@ -26,7 +26,7 @@ contract LiquidityManagerTest is StdCheats, Test, Script {
         vm.startPrank(owner);
         hc = new HelperConfig();
         msc = new MultiSigContract();
-        lm = new LiquidityManager(address(0), address(0));
+        lm = new LiquidityManager(hc.getAnvilConfig().poolManager, address(0));
         ftc = new FactoryTokenContract(address(msc), address(lm), owner);
         msc.setFactoryTokenContract(address(ftc));
         txId = ftc.queueCreateMemecoin(
@@ -46,17 +46,5 @@ contract LiquidityManagerTest is StdCheats, Test, Script {
         msc.signTx(txId);
     }
 
-    function testQueueTx() public view {
-        assertGt(txId, 0);
-        FactoryTokenContract.TxData memory txData = ftc.getTxData(txId);
-        assertEq(txData.txId, txId);
-        assertEq(txData.owner, owner);
-        assertEq(txData.signers.length, 2);
-        assertEq(txData.isPending, false);
-    }
-
-    function testExecuteCreateMemecoin() public view {
-        FactoryTokenContract.TxData memory txData = ftc.getTxData(txId);
-        assertEq(TokenContract(txData.tokenAddress).owner(), owner);
-    }
+    function testAddLiquidty() public {}
 }

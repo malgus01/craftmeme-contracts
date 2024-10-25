@@ -22,7 +22,10 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         vm.startPrank(owner);
         hc = new HelperConfig();
         msc = new MultiSigContract();
-        lm = new LiquidityManager(address(0), address(0));
+        lm = new LiquidityManager(
+            address(hc.getAnvilConfig().poolManager),
+            address(0)
+        );
         ftc = new FactoryTokenContract(address(msc), address(lm), owner);
 
         msc.setFactoryTokenContract(address(ftc));

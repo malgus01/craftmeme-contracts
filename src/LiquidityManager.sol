@@ -64,15 +64,15 @@ contract LiquidityManager {
             (token0, token1) = (token1, token0);
         }
 
-        // PoolKey memory poolKey = PoolKey({
-        //     currency0: Currency.wrap(token0),
-        //     currency1: Currency.wrap(token1),
-        //     fee: swapFee,
-        //     tickSpacing: tickSpacing,
-        //     hooks: IHooks(address(0)) // Hookless pool
-        //  });
+        PoolKey memory poolKey = PoolKey({
+            currency0: Currency.wrap(token0),
+            currency1: Currency.wrap(token1),
+            fee: swapFee,
+            tickSpacing: tickSpacing,
+            hooks: IHooks(address(0)) // Hookless pool
+        });
 
-        // poolManager.initialize(poolKey, startingPrice);
+        poolManager.initialize(poolKey, startingPrice);
         poolInitialized[token0] = true;
         emit PoolInitialized(token0, token1, address(poolManager));
     }
