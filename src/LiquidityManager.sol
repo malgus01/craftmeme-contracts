@@ -63,6 +63,7 @@ contract LiquidityManager {
 
         poolManager.initialize(poolKey, startingPrice);
         poolInitialized[token0] = true;
+        poolInitialized[token1] = true;
         emit PoolInitialized(token0, token1, address(poolManager));
     }
 
