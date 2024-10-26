@@ -22,6 +22,7 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         vm.startPrank(owner);
         hc = new HelperConfig();
         msc = new MultiSigContract();
+        lm = new LiquidityManager(address(hc.getAnvilConfig().poolManager), address(0));
         ftc = new FactoryTokenContract(address(msc), address(lm), owner);
 
         msc.setFactoryTokenContract(address(ftc));
@@ -58,7 +59,17 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         assertEq(temp, notOwner);
     }
 
-    function testUnsignTx() public { }
+    function testUnsignTx() public {
+        vm.startPrank(notOwner);
+        msc.signTx(txId);
+        msc.unsignTx(txId);
+        MultiSigContract.TxData memory txn = msc.getPendingTxData(txId);
+        address[] memory signatures = txn.signatures;
+        for (uint256 i = 0; i < signatures.length; i++) {
+            assertNotEq(signatures[i], notOwner);
+        }
+        vm.stopPrank();
+    }
 
     function testExecuteTx() public {
         vm.prank(owner);

@@ -33,9 +33,9 @@ contract LiquidityManager {
     mapping(address => mapping(address => LiquidityProvider)) public liquidityProviders;
     mapping(address => bool) public poolInitialized;
 
-    constructor(IPoolManager _poolManager, VestingContract _vestingContract) {
-        poolManager = _poolManager;
-        vestingContract = _vestingContract;
+    constructor(address _poolManager, address _vestingContract) {
+        poolManager = IPoolManager(_poolManager);
+        vestingContract = VestingContract(_vestingContract);
     }
 
     // Initialize a Uniswap V4 pool if it hasn't been initialized yet
@@ -63,6 +63,7 @@ contract LiquidityManager {
 
         poolManager.initialize(poolKey, startingPrice);
         poolInitialized[token0] = true;
+        poolInitialized[token1] = true;
         emit PoolInitialized(token0, token1, address(poolManager));
     }
 
