@@ -25,7 +25,7 @@ contract FactoryTokenContractTest is StdCheats, Test, Script {
         signers[1] = notOwner;
         vm.startPrank(owner);
         hc = new HelperConfig();
-        msc = new MultiSigContract();
+        msc = new MultiSigContract(hc.getAnvilConfig().ispAddress, hc.getAnvilConfig().signatureSchemaId);
         lm = new LiquidityManager(hc.getAnvilConfig().poolManager, address(0));
         ftc = new FactoryTokenContract(address(msc), address(lm), owner);
         msc.setFactoryTokenContract(address(ftc));

@@ -38,7 +38,9 @@ contract LiquidityManager {
         vestingContract = VestingContract(_vestingContract);
     }
 
-    // Initialize a Uniswap V4 pool if it hasn't been initialized yet
+    /**
+     * @notice Initializes a new Uniswap V4 pool.
+     */
     function initializePool(
         address token0,
         address token1,

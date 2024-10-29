@@ -211,4 +211,8 @@ contract FactoryTokenContract is Ownable {
     function getUSDCAddress() public view returns (address) {
         return USDC_ADDRESS;
     }
+
+    function getTokenArray() public view returns (TxData[] memory) {
+        return txArray;
+    }
 }
