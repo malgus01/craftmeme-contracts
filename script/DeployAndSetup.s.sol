@@ -20,7 +20,7 @@ contract DeployAndSetup is Script {
         hc = new HelperConfig();
         vm.startBroadcast();
         msc = new MultiSigContract(hc.getBaseSepoliaConfig().ispAddress, hc.getBaseSepoliaConfig().signatureSchemaId);
-        // vc = new VestingContract();
+        vc = new VestingContract(msg.sender);
         lm = new LiquidityManager(hc.getBaseSepoliaConfig().poolManager, address(vc));
         ftc = new FactoryTokenContract(address(msc), address(lm), msg.sender);
         msc.setFactoryTokenContract(address(ftc));
