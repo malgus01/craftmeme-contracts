@@ -18,7 +18,7 @@ contract LiquidityManager {
 
     IPoolManager public poolManager;
     VestingContract public vestingContract;
-    uint256 public liquidityThreshold = 20 * 1e6; // 20 USDT or USDC
+    uint256 public liquidityThreshold = 2 * 1e6; // 20 USDT or USDC
 
     struct LiquidityProvider {
         uint256 amountProvided;
@@ -102,5 +102,9 @@ contract LiquidityManager {
     // Allow users to claim their vested tokens
     function claimVestedTokens() external {
         vestingContract.release(msg.sender);
+    }
+
+    function isThresholdMet(address token) external view returns (bool) {
+        return liquidityProviders[msg.sender][token].amountProvided >= liquidityThreshold;
     }
 }

@@ -40,6 +40,7 @@ contract VestingContract is Ownable {
     /**
      * @dev Sets up a vesting schedule for a beneficiary.
      * @param beneficiary Address of the beneficiary.
+     * @param tokenAddress Address of the token being vested.
      * @param start Vesting start time (in UNIX timestamp).
      * @param duration Duration of the vesting period in seconds.
      * @param amount Total number of tokens to be vested.

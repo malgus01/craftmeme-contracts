@@ -19,21 +19,21 @@ contract HelperConfig is Script {
     constructor() { }
 
     function getOptimismMainnetConfig() public view returns (NetworkConfig memory) {
-        console2.log("Wotking on optimism mainnet now....");
+        console2.log("Working on optimism mainnet now....");
         NetworkConfig memory config =
             NetworkConfig({ poolManager: address(2), ispAddress: address(0), signatureSchemaId: 1 });
         return config;
     }
 
     function getOptimismSepoliaConfig() public view returns (NetworkConfig memory) {
-        console2.log("Wotking on optimism mainnet now....");
+        console2.log("Working on optimism sepolia now....");
         NetworkConfig memory config =
             NetworkConfig({ poolManager: address(2), ispAddress: address(0), signatureSchemaId: 1 });
         return config;
     }
 
     function getBaseSepoliaConfig() public view returns (NetworkConfig memory) {
-        console2.log("Wotking on optimism mainnet now....");
+        console2.log("Working on base sepolia now....");
         NetworkConfig memory config = NetworkConfig({
             poolManager: 0x7Da1D65F8B249183667cdE74C5CBD46dD38AA829,
             ispAddress: 0x4e4af2a21ebf62850fD99Eb6253E1eFBb56098cD,
