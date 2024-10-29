@@ -83,25 +83,16 @@ contract LiquidityManager {
     {
         require(poolInitialized[token0], PoolNotInitialized());
 
-        // Transfer tokens from the provider to the contract
         IERC20(token0).safeTransferFrom(msg.sender, address(this), amountToken0);
         IERC20(token1).safeTransferFrom(msg.sender, address(this), amountToken1);
 
-        // Logic for checking the liquidity threshold
         uint256 totalLiquidity = amountToken0 + amountToken1;
         liquidityProviders[msg.sender][token0].amountProvided += totalLiquidity;
 
-        // Once threshold is reached, trading is enabled on Uniswap
         if (liquidityProviders[msg.sender][token0].amountProvided >= liquidityThreshold) {
             emit LiquidityThresholdReached(token0, token1);
 
-            // Lock liquidity provider's tokens in the VestingContract
-            vestingContract.setVestingSchedule(
-                msg.sender,
-                block.timestamp,
-                8 * 30 days, // 8 months vesting period
-                totalLiquidity
-            );
+            vestingContract.setVestingSchedule(msg.sender, token0, block.timestamp, 8 * 30 days, totalLiquidity);
             liquidityProviders[msg.sender][token0].hasVested = true;
         }
 

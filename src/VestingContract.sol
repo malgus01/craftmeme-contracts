@@ -19,10 +19,10 @@ contract VestingContract is Ownable {
 
     using SafeERC20 for IERC20;
 
-    IERC20 private immutable memeToken;
-    LiquidityManager public liquidityManager;
+    LiquidityManager liquidityManager;
 
     struct VestingSchedule {
+        address tokenAddress;
         uint256 start;
         uint256 duration;
         uint256 amount;
@@ -35,14 +35,7 @@ contract VestingContract is Ownable {
     event TokensReleased(address indexed beneficiary, uint256 indexed amount);
     event VestingRevoked(address indexed beneficiary);
 
-    modifier onlyLiquidityManager() {
-        require(msg.sender == address(liquidityManager), "Not authorized");
-        _;
-    }
-
-    constructor(address InitialOwner, IERC20 _memeToken) Ownable(InitialOwner) {
-        memeToken = _memeToken;
-    }
+    constructor(address InitialOwner) Ownable(InitialOwner) { }
 
     /**
      * @dev Sets up a vesting schedule for a beneficiary.
@@ -53,6 +46,7 @@ contract VestingContract is Ownable {
      */
     function setVestingSchedule(
         address beneficiary,
+        address tokenAddress,
         uint256 start,
         uint256 duration,
         uint256 amount
@@ -62,8 +56,14 @@ contract VestingContract is Ownable {
     {
         require(vestingSchedules[beneficiary].amount == 0, VestingAlreadySet());
 
-        vestingSchedules[beneficiary] =
-            VestingSchedule({ start: start, duration: duration, amount: amount, released: 0, revoked: false });
+        vestingSchedules[beneficiary] = VestingSchedule({
+            tokenAddress: tokenAddress,
+            start: start,
+            duration: duration,
+            amount: amount,
+            released: 0,
+            revoked: false
+        });
     }
 
     /**
@@ -79,7 +79,7 @@ contract VestingContract is Ownable {
         require(unreleased > 0, NoTokensAreDue());
 
         schedule.released += unreleased;
-        memeToken.safeTransfer(beneficiary, unreleased);
+        IERC20(schedule.tokenAddress).safeTransfer(beneficiary, unreleased);
 
         emit TokensReleased(beneficiary, unreleased);
     }
