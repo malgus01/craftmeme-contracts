@@ -8,6 +8,7 @@ Welcome to MemeCoin Launchpad, a decentralized platform where users can create a
 
 - [CraftMeme 🚀](#craftmeme-)
   - [Overview](#overview)
+  - [Deployed Contracts](#deployed-contracts)
   - [Project Architecture](#project-architecture)
   - [Core Features](#core-features)
     - [ERC-20 Factory](#erc-20-factory)
@@ -33,6 +34,13 @@ MemeCoin Launchpad is designed to be a simple, secure, and user-friendly platfor
 
 This platform integrates with QuickNode Functions, Uniswap, and OpenZeppelin libraries to provide a seamless token creation and liquidity experience.
 
+## Deployed Contracts on Base Sepolia
+
+MultiSigContract : https://base-sepolia.blockscout.com/address/0xc3D976e1d4B8B4bf8361bAED9928E5df546d18c3?tab=write_contract
+VestingContract : https://base-sepolia.blockscout.com/address/0x13caa03C683825c31C3429c8ecD58c15D6FbD2f1?tab=contract
+LiquidityManager : https://base-sepolia.blockscout.com/address/0x432891844dD3215844B47827d5A6581c4Cb72378?tab=contract
+FactoryTokenContract : https://base-sepolia.blockscout.com/address/0xd47BDd29C984722B229141dE99C80c210de04E02?tab=read_contract
+
 ## Project Architecture
 
 The project consists of the following main components:
@@ -53,11 +61,11 @@ The project consists of the following main components:
 The MemeCoin Launchpad allows users to create their own meme tokens through an ERC-20 token factory. The factory contract uses the OpenZeppelin ERC-20 library for reliable and secure token implementation.
 
 - Parameters:
-    - Token Name
-    - Token Symbol
-    - initial Supply
-    - Token Owner
-    - Additional parameters like minting, burning, and custom fee mechanisms can be added if needed.
+  - Token Name
+  - Token Symbol
+  - initial Supply
+  - Token Owner
+  - Additional parameters like minting, burning, and custom fee mechanisms can be added if needed.
 
 ### Uniswap Liquidity Integration
 
@@ -75,8 +83,8 @@ To ensure that meme tokens are liquid enough to be traded fairly, the platform r
 To prevent sudden dumps and rugpulls, MemeCoin Launchpad implements a vesting schedule for tokens purchased during the initial liquidity provision. The purchased tokens are locked and gradually released over a 10-month period. This helps maintain price stability and encourages long-term holding.
 
 - Vesting Breakdown:
-    - Month 1: 8% of the purchased tokens released
-    - Gradual increase each month, with full release by Month 10.
+  - Month 1: 8% of the purchased tokens released
+  - Gradual increase each month, with full release by Month 10.
 
 ### Multisignature Governance
 
@@ -120,30 +128,32 @@ We integrated QuickNode Marketplace addons to enhance the functionality and secu
 - QuickNode Analytics for tracking token metrics.
 - QuickNode Alerts for sending real-time notifications when tokens reach key milestones, such as liquidity thresholds or vesting completions.
 
-
 ## Smart Contracts
 
 ### Factory Contract
+
 The ERC-20 Factory allows users to create meme tokens on demand.
 
 - Functions:
-    - createToken(name, symbol, initialSupply, owner)
-    - provideLiquidity(tokenAddress, amount)
+  - createToken(name, symbol, initialSupply, owner)
+  - provideLiquidity(tokenAddress, amount)
 
 ### Vesting Contract
+
 Handles the gradual release of tokens to prevent sudden sell-offs.
 
 - Functions:
-    - lockTokens(user, amount, duration)
-    - releaseTokens(user)
+  - lockTokens(user, amount, duration)
+  - releaseTokens(user)
 
 ### Multisig Contract
+
 Provides security for memetoken owners by requiring multiple approvals for sensitive actions.
 
 - Functions:
-    - addSigner(address)
-    - removeSigner(address)
-    - approveTransaction()
+  - addSigner(address)
+  - removeSigner(address)
+  - approveTransaction()
 
 ## Potential Future Enhancements
 
@@ -152,4 +162,5 @@ Provides security for memetoken owners by requiring multiple approvals for sensi
 - Governance: Allow memetoken holders to vote on project-related decisions using a decentralized governance model.
 
 ## License
+
 MIT License
