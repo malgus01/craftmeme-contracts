@@ -21,8 +21,8 @@ contract DeployAndSetup is Script {
         vm.startBroadcast();
         // Step 1: Deploy MultiSigContract
         msc = new MultiSigContract(
-            hc.getBaseSepoliaConfig().ispAddress,
-            hc.getBaseSepoliaConfig().signatureSchemaId
+            hc.getETHSepoliaConfig().ispAddress,
+            hc.getETHSepoliaConfig().signatureSchemaId
         );
         console2.log("MultiSigContract deployed at:", address(msc));
 
@@ -32,7 +32,7 @@ contract DeployAndSetup is Script {
 
         // Step 3: Deploy LiquidityManager
         lm = new LiquidityManager(
-            hc.getBaseSepoliaConfig().poolManager,
+            hc.getETHSepoliaConfig().poolManager,
             address(vc)
         );
         console2.log("LiquidityManager deployed at:", address(lm));

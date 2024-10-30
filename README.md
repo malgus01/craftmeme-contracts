@@ -41,6 +41,13 @@ VestingContract : https://base-sepolia.blockscout.com/address/0x13caa03C683825c3
 LiquidityManager : https://base-sepolia.blockscout.com/address/0x432891844dD3215844B47827d5A6581c4Cb72378?tab=contract
 FactoryTokenContract : https://base-sepolia.blockscout.com/address/0xd47BDd29C984722B229141dE99C80c210de04E02?tab=read_contract
 
+## Deployed Contracts on ETH Sepolia
+
+MultiSigContract : https://eth-sepolia.blockscout.com/address/0x5e3dE139baDA3534171fC0F37c0449cb4e38eB56?tab=write_contract
+VestingContract : https://eth-sepolia.blockscout.com/address/0xd4dC56f9067039accB4178Cac5Ab5759f3276e36?tab=write_contract
+LiquidityManager : https://eth-sepolia.blockscout.com/address/0x86C82eFA601F306b7c5c16AE3B3f550714A6Bd8f?tab=logs
+FactoryTokenContract : https://eth-sepolia.blockscout.com/address/0x301C96eC196fB6E1FE8B7eb777F317E5261B37eB?tab=read_contract
+
 ## Project Architecture
 
 The project consists of the following main components:
