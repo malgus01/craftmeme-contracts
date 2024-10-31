@@ -25,28 +25,28 @@ contract TokenContract is ERC20, ERC20Pausable, Ownable {
     //////////////////////
     // State variables //
     ////////////////////
-    // @dev Initial supply of the token minted at deployment
+    /// @notice Initial supply of the token minted at deployment
     uint256 private initialSupply;
 
-    // @dev Max supply of the token
+    /// @notice Max supply of the token
     uint256 private maxSupply;
 
-    // @dev Total supply of the token
+    /// @notice Total supply of the token
     bool private supplyCapEnabled;
 
-    // @dev Whether the token can be minted
+    /// @notice Whether the token can be minted
     bool private canMint;
 
-    // @dev Whether the token can be burned
+    /// @notice Whether the token can be burned
     bool private canBurn;
 
     /////////////
     // Events //
     ///////////
-    // @dev Emit when a new token is minted
+    /// @notice Emit when a new token is minted
     event Mint(address indexed from, uint256 indexed amount);
 
-    // @dev Emit when a token is burned
+    /// @notice Emit when a token is burned
     event Burn(address indexed from, uint256 indexed amount);
 
     ////////////////
