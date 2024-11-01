@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { TokenContract } from "./helpers/TokenContract.sol";
-import { MultiSigContract } from "./MultiSigContract.sol";
-import { LiquidityManager } from "./LiquidityManager.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {TokenContract} from "./helpers/TokenContract.sol";
+import {MultiSigContract} from "./MultiSigContract.sol";
+import {LiquidityManager} from "./LiquidityManager.sol";
 
 /**
  * @title FactoryTokenContract.
@@ -37,6 +37,7 @@ contract FactoryTokenContract is Ownable {
         bool canBurn;
         bool supplyCapEnabled;
         address tokenAddress;
+        string ipfsHash;
     }
 
     TxData[] public txArray;
@@ -45,15 +46,26 @@ contract FactoryTokenContract is Ownable {
     mapping(address => uint256) public ownerToTxId;
 
     event TransactionQueued(
-        uint256 indexed txId, address indexed owner, address[] signers, string tokenName, string tokenSymbol
+        uint256 indexed txId,
+        address indexed owner,
+        address[] signers,
+        string tokenName,
+        string tokenSymbol
     );
 
     event MemecoinCreated(
-        address indexed owner, address indexed tokenAddress, string indexed name, string symbol, uint256 supply
+        address indexed owner,
+        address indexed tokenAddress,
+        string indexed name,
+        string symbol,
+        uint256 supply
     );
 
     modifier onlyMultiSigContract() {
-        require(msg.sender == address(multiSigContract), FactoryTokenContract__onlyMultiSigContract());
+        require(
+            msg.sender == address(multiSigContract),
+            FactoryTokenContract__onlyMultiSigContract()
+        );
         _;
     }
 
@@ -62,7 +74,11 @@ contract FactoryTokenContract is Ownable {
         _;
     }
 
-    constructor(address _multiSigContract, address _liquidityManager, address initialOwner) Ownable(initialOwner) {
+    constructor(
+        address _multiSigContract,
+        address _liquidityManager,
+        address initialOwner
+    ) Ownable(initialOwner) {
         multiSigContract = MultiSigContract(_multiSigContract);
         liquidityManager = LiquidityManager(_liquidityManager);
         TxData memory constructorTx = TxData({
@@ -77,7 +93,8 @@ contract FactoryTokenContract is Ownable {
             canMint: false,
             canBurn: false,
             supplyCapEnabled: false,
-            tokenAddress: address(0)
+            tokenAddress: address(0),
+            ipfsHash: ""
         });
         txArray.push(constructorTx);
         ownerToTxId[address(0)] = 0;
@@ -103,11 +120,9 @@ contract FactoryTokenContract is Ownable {
         uint256 _maxSupply,
         bool _canMint,
         bool _canBurn,
-        bool _supplyCapEnabled
-    )
-        external
-        returns (uint256 txId)
-    {
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
+    ) external returns (uint256 txId) {
         require(_signers.length >= 2, InvalidSignerCount());
         require(bytes(_tokenName).length > 0, EmptyName());
         require(bytes(_tokenSymbol).length > 0, EmptySymbol());
@@ -116,7 +131,16 @@ contract FactoryTokenContract is Ownable {
             require(_maxSupply >= _totalSupply, InvalidSupply());
         }
         txId = _handleQueue(
-            _signers, _owner, _tokenName, _tokenSymbol, _totalSupply, _maxSupply, _canMint, _canBurn, _supplyCapEnabled
+            _signers,
+            _owner,
+            _tokenName,
+            _tokenSymbol,
+            _totalSupply,
+            _maxSupply,
+            _canMint,
+            _canBurn,
+            _supplyCapEnabled,
+            _ipfsHash
         );
     }
 
@@ -125,7 +149,9 @@ contract FactoryTokenContract is Ownable {
      * @notice Memecoin has been created when this function is called.
      * @dev This function is only callable by the MultiSigContract.
      */
-    function executeCreateMemecoin(uint256 _txId) public onlyMultiSigContract onlyPendigTx(_txId) {
+    function executeCreateMemecoin(
+        uint256 _txId
+    ) public onlyMultiSigContract onlyPendigTx(_txId) {
         _createMemecoin(_txId);
     }
 
@@ -147,11 +173,9 @@ contract FactoryTokenContract is Ownable {
         uint256 _maxSupply,
         bool _canMint,
         bool _canBurn,
-        bool _supplyCapEnabled
-    )
-        internal
-        returns (uint256 txId)
-    {
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
+    ) internal returns (uint256 txId) {
         TxData memory tempTx = TxData({
             txId: TX_ID,
             owner: _owner,
@@ -164,17 +188,26 @@ contract FactoryTokenContract is Ownable {
             canMint: _canMint,
             canBurn: _canBurn,
             supplyCapEnabled: _supplyCapEnabled,
-            tokenAddress: address(0)
+            tokenAddress: address(0),
+            ipfsHash: _ipfsHash
         });
         txArray.push(tempTx);
         ownerToTxId[_owner] = TX_ID;
         multiSigContract.queueTx(TX_ID, _owner, _signers);
-        emit TransactionQueued(TX_ID, _owner, _signers, _tokenName, _tokenSymbol);
+        emit TransactionQueued(
+            TX_ID,
+            _owner,
+            _signers,
+            _tokenName,
+            _tokenSymbol
+        );
         txId = TX_ID;
         TX_ID += 1;
     }
 
-    function _createMemecoin(uint256 _txId) internal returns (TokenContract newToken) {
+    function _createMemecoin(
+        uint256 _txId
+    ) internal returns (TokenContract newToken) {
         TxData memory txData = txArray[_txId];
         // Deploy new TokenContract for the memecoin
         newToken = new TokenContract(
@@ -200,11 +233,19 @@ contract FactoryTokenContract is Ownable {
         txArray[_txId].isPending = false;
         txArray[_txId].tokenAddress = address(newToken);
         // Emit the MemecoinCreated event
-        emit MemecoinCreated(txData.owner, address(newToken), txData.tokenName, txData.tokenSymbol, txData.totalSupply);
+        emit MemecoinCreated(
+            txData.owner,
+            address(newToken),
+            txData.tokenName,
+            txData.tokenSymbol,
+            txData.totalSupply
+        );
     }
 
     // Function to update LiquidityManager address, if needed
-    function updateLiquidityManager(address _liquidityManager) external onlyOwner {
+    function updateLiquidityManager(
+        address _liquidityManager
+    ) external onlyOwner {
         liquidityManager = LiquidityManager(_liquidityManager);
     }
 
