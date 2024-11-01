@@ -43,10 +43,10 @@ FactoryTokenContract : https://base-sepolia.blockscout.com/address/0xd47BDd29C98
 
 ## Deployed Contracts on ETH Sepolia
 
-MultiSigContract : https://eth-sepolia.blockscout.com/address/0x5e3dE139baDA3534171fC0F37c0449cb4e38eB56?tab=write_contract
-VestingContract : https://eth-sepolia.blockscout.com/address/0xd4dC56f9067039accB4178Cac5Ab5759f3276e36?tab=write_contract
-LiquidityManager : https://eth-sepolia.blockscout.com/address/0x86C82eFA601F306b7c5c16AE3B3f550714A6Bd8f?tab=logs
-FactoryTokenContract : https://eth-sepolia.blockscout.com/address/0x301C96eC196fB6E1FE8B7eb777F317E5261B37eB?tab=read_contract
+MultiSigContract : https://eth-sepolia.blockscout.com/address/0x14636fe21e5AB1071768218ce59358d238462212
+VestingContract : https://eth-sepolia.blockscout.com/address/0x510a34176fC0CAfD03a7386a77aeE41aC7bd7a09
+LiquidityManager : https://eth-sepolia.blockscout.com/address/0x87B8A985EBE3B44E6eF06fA938bD8B4202DDD2dF
+FactoryTokenContract : https://eth-sepolia.blockscout.com/address/0x4C43423d55dBa56370448468096cEA3B3cC2e88A
 
 ## Project Architecture
 

@@ -51,7 +51,8 @@ contract DeployAndTest is Script {
             2_000_000 * 1e18,
             true, // canMint
             true, // canBurn
-            true // supplyCapEnabled
+            true, // supplyCapEnabled
+            ""
         );
         console2.log("Queued token creation with txId:", txId);
 

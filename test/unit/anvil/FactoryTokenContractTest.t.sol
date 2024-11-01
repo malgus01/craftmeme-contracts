@@ -29,7 +29,7 @@ contract FactoryTokenContractTest is StdCheats, Test, Script {
         lm = new LiquidityManager(hc.getAnvilConfig().poolManager, address(0));
         ftc = new FactoryTokenContract(address(msc), address(lm), owner);
         msc.setFactoryTokenContract(address(ftc));
-        txId = ftc.queueCreateMemecoin(signers, owner, "test", "test", 100, 100, false, false, false);
+        txId = ftc.queueCreateMemecoin(signers, owner, "test", "test", 100, 100, false, false, false, "");
         msc.signTx(txId);
         vm.stopPrank();
         vm.prank(notOwner);

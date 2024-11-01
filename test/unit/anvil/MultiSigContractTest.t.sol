@@ -30,7 +30,7 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         address[] memory signers = new address[](2);
         signers[0] = owner;
         signers[1] = notOwner;
-        txId = ftc.queueCreateMemecoin(signers, owner, "Memecoin", "MEM", 1_000_000, 1_000_000, true, true, true);
+        txId = ftc.queueCreateMemecoin(signers, owner, "Memecoin", "MEM", 1_000_000, 1_000_000, true, true, true, "");
         vm.stopPrank();
     }
 

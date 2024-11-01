@@ -49,6 +49,7 @@ contract FactoryTokenContract is Ownable {
         bool canBurn;
         bool supplyCapEnabled;
         address tokenAddress;
+        string ipfsHash;
     }
 
     /// @notice array to store tx data
@@ -112,7 +113,8 @@ contract FactoryTokenContract is Ownable {
             canMint: false,
             canBurn: false,
             supplyCapEnabled: false,
-            tokenAddress: address(0)
+            tokenAddress: address(0),
+            ipfsHash: ""
         });
         txArray.push(constructorTx);
         ownerToTxId[address(0)] = 0;
@@ -142,7 +144,8 @@ contract FactoryTokenContract is Ownable {
         uint256 _maxSupply,
         bool _canMint,
         bool _canBurn,
-        bool _supplyCapEnabled
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
     )
         external
         returns (uint256 txId)
@@ -155,7 +158,16 @@ contract FactoryTokenContract is Ownable {
             require(_maxSupply >= _totalSupply, InvalidSupply());
         }
         txId = _handleQueue(
-            _signers, _owner, _tokenName, _tokenSymbol, _totalSupply, _maxSupply, _canMint, _canBurn, _supplyCapEnabled
+            _signers,
+            _owner,
+            _tokenName,
+            _tokenSymbol,
+            _totalSupply,
+            _maxSupply,
+            _canMint,
+            _canBurn,
+            _supplyCapEnabled,
+            _ipfsHash
         );
     }
 
@@ -199,7 +211,8 @@ contract FactoryTokenContract is Ownable {
         uint256 _maxSupply,
         bool _canMint,
         bool _canBurn,
-        bool _supplyCapEnabled
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
     )
         internal
         returns (uint256 txId)
@@ -216,7 +229,8 @@ contract FactoryTokenContract is Ownable {
             canMint: _canMint,
             canBurn: _canBurn,
             supplyCapEnabled: _supplyCapEnabled,
-            tokenAddress: address(0)
+            tokenAddress: address(0),
+            ipfsHash: _ipfsHash
         });
         txArray.push(tempTx);
         ownerToTxId[_owner] = TX_ID;
