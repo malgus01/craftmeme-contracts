@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.10;
 
-import {console2} from "forge-std/Test.sol";
-import {Script} from "forge-std/Script.sol";
-import {PoolManagerMock} from "../test/unit/anvil/Mocks/PoolManagerMock.sol";
-import {ISPMock} from "../test/unit/anvil/Mocks/ISPMock.sol";
+import { console2 } from "forge-std/Test.sol";
+import { Script } from "forge-std/Script.sol";
+import { PoolManagerMock } from "../test/unit/anvil/Mocks/PoolManagerMock.sol";
+import { ISPMock } from "../test/unit/anvil/Mocks/ISPMock.sol";
 
 contract HelperConfig is Script {
     struct NetworkConfig {
@@ -16,33 +16,19 @@ contract HelperConfig is Script {
 
     NetworkConfig public ActiveConfig;
 
-    constructor() {}
+    constructor() { }
 
-    function getOptimismMainnetConfig()
-        public
-        view
-        returns (NetworkConfig memory)
-    {
+    function getOptimismMainnetConfig() public view returns (NetworkConfig memory) {
         console2.log("Working on optimism mainnet now....");
-        NetworkConfig memory config = NetworkConfig({
-            poolManager: address(2),
-            ispAddress: address(0),
-            signatureSchemaId: 1
-        });
+        NetworkConfig memory config =
+            NetworkConfig({ poolManager: address(2), ispAddress: address(0), signatureSchemaId: 1 });
         return config;
     }
 
-    function getOptimismSepoliaConfig()
-        public
-        view
-        returns (NetworkConfig memory)
-    {
+    function getOptimismSepoliaConfig() public view returns (NetworkConfig memory) {
         console2.log("Working on optimism sepolia now....");
-        NetworkConfig memory config = NetworkConfig({
-            poolManager: address(2),
-            ispAddress: address(0),
-            signatureSchemaId: 1
-        });
+        NetworkConfig memory config =
+            NetworkConfig({ poolManager: address(2), ispAddress: address(0), signatureSchemaId: 1 });
         return config;
     }
 
@@ -70,11 +56,8 @@ contract HelperConfig is Script {
         PoolManagerMock poolMock = new PoolManagerMock();
         ISPMock ispMock = new ISPMock();
         console2.log("Wotking on optimism mainnet now....");
-        NetworkConfig memory config = NetworkConfig({
-            poolManager: address(poolMock),
-            ispAddress: address(ispMock),
-            signatureSchemaId: 1
-        });
+        NetworkConfig memory config =
+            NetworkConfig({ poolManager: address(poolMock), ispAddress: address(ispMock), signatureSchemaId: 1 });
         return config;
     }
 
