@@ -59,7 +59,7 @@ contract VestingContract is Ownable {
     /**
      * @param InitialOwner The initial owner of the contract.
      */
-    constructor(address InitialOwner) Ownable(InitialOwner) {}
+    constructor(address InitialOwner) Ownable(InitialOwner) { }
 
     /**
      * @notice Sets up a vesting schedule for a beneficiary.
@@ -76,7 +76,10 @@ contract VestingContract is Ownable {
         uint256 start,
         uint256 duration,
         uint256 amount
-    ) external onlyOwner {
+    )
+        external
+        onlyOwner
+    {
         require(vestingSchedules[beneficiary].amount == 0, VestingAlreadySet());
 
         vestingSchedules[beneficiary] = VestingSchedule({
@@ -135,9 +138,7 @@ contract VestingContract is Ownable {
         } else if (block.timestamp >= schedule.start + schedule.duration) {
             return schedule.amount;
         } else {
-            return
-                (schedule.amount * (block.timestamp - schedule.start)) /
-                schedule.duration;
+            return (schedule.amount * (block.timestamp - schedule.start)) / schedule.duration;
         }
     }
 }

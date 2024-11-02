@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
-import {IHooks} from "v4-core/src/interfaces/IHooks.sol";
-import {PoolKey} from "v4-core/src/types/PoolKey.sol";
-import {CurrencyLibrary, Currency} from "v4-core/src/types/Currency.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {VestingContract} from "./VestingContract.sol";
+import { IPoolManager } from "v4-core/src/interfaces/IPoolManager.sol";
+import { IHooks } from "v4-core/src/interfaces/IHooks.sol";
+import { PoolKey } from "v4-core/src/types/PoolKey.sol";
+import { CurrencyLibrary, Currency } from "v4-core/src/types/Currency.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { VestingContract } from "./VestingContract.sol";
 
 /**
  * @title LiquidityManager
@@ -49,8 +49,7 @@ contract LiquidityManager {
     uint256 public liquidityThreshold = 2 * 1e6; // 20 USDT or USDC
 
     /// @notice Mapping of liquidity providers to their liquidity data
-    mapping(address => mapping(address => LiquidityProvider))
-        public liquidityProviders;
+    mapping(address => mapping(address => LiquidityProvider)) public liquidityProviders;
 
     /// @notice Mapping of tokens to whether the pool has been initialized
     mapping(address => bool) public poolInitialized;
@@ -59,25 +58,13 @@ contract LiquidityManager {
     // Events //
     ///////////
     /// @notice Emit when a new pool is initialized
-    event PoolInitialized(
-        address indexed token0,
-        address indexed token1,
-        address indexed pool
-    );
+    event PoolInitialized(address indexed token0, address indexed token1, address indexed pool);
 
     /// @notice Emit when liquidity is added to a pool
-    event LiquidityAdded(
-        address indexed provider,
-        address indexed token0,
-        address indexed token1,
-        uint256 amount
-    );
+    event LiquidityAdded(address indexed provider, address indexed token0, address indexed token1, uint256 amount);
 
     /// @notice Emit when liquidity threshold is reached
-    event LiquidityThresholdReached(
-        address indexed token0,
-        address indexed token1
-    );
+    event LiquidityThresholdReached(address indexed token0, address indexed token1);
 
     ////////////////
     // Functions //
@@ -106,7 +93,9 @@ contract LiquidityManager {
         uint24 swapFee,
         int24 tickSpacing,
         uint160 startingPrice
-    ) external {
+    )
+        external
+    {
         require(!poolInitialized[token0], PoolAlreadyInitialized());
         if (token0 > token1) {
             (token0, token1) = (token1, token0);
@@ -118,7 +107,7 @@ contract LiquidityManager {
             fee: swapFee,
             tickSpacing: tickSpacing,
             hooks: IHooks(address(0)) // Hookless pool
-        });
+         });
 
         poolManager.initialize(poolKey, startingPrice);
         poolInitialized[token0] = true;
@@ -146,36 +135,21 @@ contract LiquidityManager {
         int24 tickUpper,
         uint256 amountToken0,
         uint256 amountToken1
-    ) external {
+    )
+        external
+    {
         require(poolInitialized[token0], PoolNotInitialized());
 
-        IERC20(token0).safeTransferFrom(
-            msg.sender,
-            address(this),
-            amountToken0
-        );
-        IERC20(token1).safeTransferFrom(
-            msg.sender,
-            address(this),
-            amountToken1
-        );
+        IERC20(token0).safeTransferFrom(msg.sender, address(this), amountToken0);
+        IERC20(token1).safeTransferFrom(msg.sender, address(this), amountToken1);
 
         uint256 totalLiquidity = amountToken0 + amountToken1;
         liquidityProviders[msg.sender][token0].amountProvided += totalLiquidity;
 
-        if (
-            liquidityProviders[msg.sender][token0].amountProvided >=
-            liquidityThreshold
-        ) {
+        if (liquidityProviders[msg.sender][token0].amountProvided >= liquidityThreshold) {
             emit LiquidityThresholdReached(token0, token1);
 
-            vestingContract.setVestingSchedule(
-                msg.sender,
-                token0,
-                block.timestamp,
-                8 * 30 days,
-                totalLiquidity
-            );
+            vestingContract.setVestingSchedule(msg.sender, token0, block.timestamp, 8 * 30 days, totalLiquidity);
             liquidityProviders[msg.sender][token0].hasVested = true;
         }
 
@@ -196,8 +170,6 @@ contract LiquidityManager {
      * @return Boolean indicating if the liquidity threshold has been met for the provider.
      */
     function isThresholdMet(address token) external view returns (bool) {
-        return
-            liquidityProviders[msg.sender][token].amountProvided >=
-            liquidityThreshold;
+        return liquidityProviders[msg.sender][token].amountProvided >= liquidityThreshold;
     }
 }

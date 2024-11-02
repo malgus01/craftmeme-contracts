@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {FactoryTokenContract} from "./FactoryTokenContract.sol";
-import {ISP} from "@signprotocol/signprotocol-evm/src/interfaces/ISP.sol";
-import {Attestation} from "@signprotocol/signprotocol-evm/src/models/Attestation.sol";
-import {DataLocation} from "@signprotocol/signprotocol-evm/src/models/DataLocation.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { FactoryTokenContract } from "./FactoryTokenContract.sol";
+import { ISP } from "@signprotocol/signprotocol-evm/src/interfaces/ISP.sol";
+import { Attestation } from "@signprotocol/signprotocol-evm/src/models/Attestation.sol";
+import { DataLocation } from "@signprotocol/signprotocol-evm/src/models/DataLocation.sol";
 
 /**
  * @title MultiSigContract
@@ -53,8 +53,7 @@ contract MultiSigContract is Ownable {
      */
     modifier onlyFactoryTokenContract() {
         require(
-            (msg.sender == address(factoryTokenContract)) ||
-                (msg.sender == owner()),
+            (msg.sender == address(factoryTokenContract)) || (msg.sender == owner()),
             MultiSigContract__onlyFactoryTokenContract()
         );
         _;
@@ -112,10 +111,7 @@ contract MultiSigContract is Ownable {
      * @param _spInstance Address of the Sign Protocol instance.
      * @param _signatureSchemaId Unique schema ID for signature verification within Sign Protocol.
      */
-    constructor(
-        address _spInstance,
-        uint64 _signatureSchemaId
-    ) Ownable(msg.sender) {
+    constructor(address _spInstance, uint64 _signatureSchemaId) Ownable(msg.sender) {
         spInstance = ISP(_spInstance);
         signatureSchemaId = _signatureSchemaId;
     }
@@ -125,9 +121,7 @@ contract MultiSigContract is Ownable {
      * @param _factoryTokenContract Address of the factory token contract.
      * @dev Callable only by the contract owner.
      */
-    function setFactoryTokenContract(
-        address _factoryTokenContract
-    ) external onlyOwner {
+    function setFactoryTokenContract(address _factoryTokenContract) external onlyOwner {
         factoryTokenContract = FactoryTokenContract(_factoryTokenContract);
     }
 
@@ -138,11 +132,7 @@ contract MultiSigContract is Ownable {
      * @param _signers List of authorized signers for this transaction.
      * @dev Can only be called by the FactoryTokenContract.
      */
-    function queueTx(
-        uint256 _txId,
-        address _owner,
-        address[] memory _signers
-    ) external onlyFactoryTokenContract {
+    function queueTx(uint256 _txId, address _owner, address[] memory _signers) external onlyFactoryTokenContract {
         _handleQueue(_txId, _owner, _signers);
     }
 
@@ -151,9 +141,7 @@ contract MultiSigContract is Ownable {
      * @param _txId The transaction ID to be signed.
      * @dev Ensures signer is authorized and hasn't signed yet. Creates an attestation on Sign Protocol.
      */
-    function signTx(
-        uint256 _txId
-    ) external onlySigner(_txId) notAlreadySigned(_txId) {
+    function signTx(uint256 _txId) external onlySigner(_txId) notAlreadySigned(_txId) {
         _handleSign(_txId);
         _attestSign(_txId, msg.sender);
     }
@@ -163,9 +151,7 @@ contract MultiSigContract is Ownable {
      * @param _txId The transaction ID to unsign.
      * @dev Requires prior approval from the signer. Revokes the attestation on Sign Protocol.
      */
-    function unsignTx(
-        uint256 _txId
-    ) external onlySigner(_txId) alreadySigned(_txId) {
+    function unsignTx(uint256 _txId) external onlySigner(_txId) alreadySigned(_txId) {
         _handleUnSign(_txId);
         _attestRevokeSign(_txId, msg.sender);
     }
@@ -174,9 +160,7 @@ contract MultiSigContract is Ownable {
      * @param _txId The ID of the transaction.
      * @return Details of the specified transaction.
      */
-    function getPendingTxData(
-        uint256 _txId
-    ) public view returns (TxData memory) {
+    function getPendingTxData(uint256 _txId) public view returns (TxData memory) {
         return pendingTxs[_txId];
     }
 
@@ -186,17 +170,8 @@ contract MultiSigContract is Ownable {
      * @param _owner Owner of the transaction.
      * @param _signers List of valid signers.
      */
-    function _handleQueue(
-        uint256 _txId,
-        address _owner,
-        address[] memory _signers
-    ) internal {
-        TxData memory tempTx = TxData({
-            txId: _txId,
-            owner: _owner,
-            signers: _signers,
-            signatures: new address[](0)
-        });
+    function _handleQueue(uint256 _txId, address _owner, address[] memory _signers) internal {
+        TxData memory tempTx = TxData({ txId: _txId, owner: _owner, signers: _signers, signatures: new address[](0) });
         pendingTxs[_txId] = tempTx;
     }
 
@@ -206,10 +181,7 @@ contract MultiSigContract is Ownable {
      * @param _txId The transaction ID.
      */
     function _handleSign(uint256 _txId) internal {
-        if (
-            pendingTxs[_txId].signatures.length ==
-            (pendingTxs[_txId].signers.length - 1)
-        ) {
+        if (pendingTxs[_txId].signatures.length == (pendingTxs[_txId].signers.length - 1)) {
             factoryTokenContract.executeCreateMemecoin(_txId);
             delete pendingTxs[_txId]; // Clear the pending transaction after execution
         } else {
