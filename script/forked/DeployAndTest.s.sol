@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import { Script, console2 } from "forge-std/Script.sol";
-import { HelperConfig } from "../HelperConfig.s.sol";
-import { MultiSigContract } from "../../src/MultiSigContract.sol";
-import { FactoryTokenContract } from "../../src/FactoryTokenContract.sol";
-import { LiquidityManager } from "../../src/LiquidityManager.sol";
-import { VestingContract } from "../../src/VestingContract.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Script, console2} from "forge-std/Script.sol";
+import {HelperConfig} from "../HelperConfig.s.sol";
+import {MultiSigContract} from "../../src/MultiSigContract.sol";
+import {FactoryTokenContract} from "../../src/FactoryTokenContract.sol";
+import {LiquidityManager} from "../../src/LiquidityManager.sol";
+import {VestingContract} from "../../src/VestingContract.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract DeployAndTest is Script {
     MultiSigContract public msc;
@@ -21,7 +21,10 @@ contract DeployAndTest is Script {
         vm.startBroadcast();
 
         // Step 1: Deploy MultiSigContract
-        msc = new MultiSigContract(hc.getBaseSepoliaConfig().ispAddress, hc.getBaseSepoliaConfig().signatureSchemaId);
+        msc = new MultiSigContract(
+            hc.getBaseSepoliaConfig().ispAddress,
+            hc.getBaseSepoliaConfig().signatureSchemaId
+        );
         console2.log("MultiSigContract deployed at:", address(msc));
 
         // Step 2: Deploy VestingContract
@@ -29,11 +32,19 @@ contract DeployAndTest is Script {
         console2.log("VestingContract deployed at:", address(vc));
 
         // Step 3: Deploy LiquidityManager
-        lm = new LiquidityManager(hc.getBaseSepoliaConfig().poolManager, address(vc));
+        lm = new LiquidityManager(
+            hc.getBaseSepoliaConfig().poolManager,
+            address(vc)
+        );
         console2.log("LiquidityManager deployed at:", address(lm));
 
         // Step 4: Deploy FactoryTokenContract and set in MultiSigContract
-        ftc = new FactoryTokenContract(address(msc), address(lm), msg.sender);
+        ftc = new FactoryTokenContract(
+            address(msc),
+            address(lm),
+            hc.getBaseSepoliaConfig().USDC,
+            msg.sender
+        );
         console2.log("FactoryTokenContract deployed at:", address(ftc));
         msc.setFactoryTokenContract(address(ftc));
 
@@ -69,10 +80,20 @@ contract DeployAndTest is Script {
         vm.startBroadcast();
         // Step 7: Add liquidity for the token, Check if liquidity threshold met, Apply vesting for liquidity providers
         address tokenAddress = ftc.getTxData(txId).tokenAddress;
-        address stableCoinAddress = address(0x036CbD53842c5426634e7929541eC2318f3dCF7e); //Base Sepolia USDC
+        address stableCoinAddress = address(
+            0x036CbD53842c5426634e7929541eC2318f3dCF7e
+        ); //Base Sepolia USDC
         uint256 liquidityAmount = 2 * 1e6; // 1 USDC/USDT
         IERC20(tokenAddress).approve(address(lm), liquidityAmount);
-        lm.addLiquidity(tokenAddress, stableCoinAddress, 300, -887_220, 887_220, liquidityAmount, 0);
+        lm.addLiquidity(
+            tokenAddress,
+            stableCoinAddress,
+            300,
+            -887_220,
+            887_220,
+            liquidityAmount,
+            0
+        );
         console2.log("Liquidity added for token at:", tokenAddress);
 
         // Step 8: Check if liquidity threshold met

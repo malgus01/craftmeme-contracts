@@ -36,17 +36,17 @@ This platform integrates with QuickNode Functions, Uniswap, and OpenZeppelin lib
 
 ## Deployed Contracts on Base Sepolia
 
-MultiSigContract : https://base-sepolia.blockscout.com/address/0xc3D976e1d4B8B4bf8361bAED9928E5df546d18c3?tab=write_contract
-VestingContract : https://base-sepolia.blockscout.com/address/0x13caa03C683825c31C3429c8ecD58c15D6FbD2f1?tab=contract
-LiquidityManager : https://base-sepolia.blockscout.com/address/0x432891844dD3215844B47827d5A6581c4Cb72378?tab=contract
-FactoryTokenContract : https://base-sepolia.blockscout.com/address/0xd47BDd29C984722B229141dE99C80c210de04E02?tab=read_contract
+- MultiSigContract : https://base-sepolia.blockscout.com/address/0xc3D976e1d4B8B4bf8361bAED9928E5df546d18c3?tab=write_contract
+- VestingContract : https://base-sepolia.blockscout.com/address/0x13caa03C683825c31C3429c8ecD58c15D6FbD2f1?tab=contract
+- LiquidityManager : https://base-sepolia.blockscout.com/address/0x432891844dD3215844B47827d5A6581c4Cb72378?tab=contract
+- FactoryTokenContract : https://base-sepolia.blockscout.com/address/0xd47BDd29C984722B229141dE99C80c210de04E02?tab=read_contract
 
 ## Deployed Contracts on ETH Sepolia
 
-MultiSigContract : https://eth-sepolia.blockscout.com/address/0x14636fe21e5AB1071768218ce59358d238462212
-VestingContract : https://eth-sepolia.blockscout.com/address/0x510a34176fC0CAfD03a7386a77aeE41aC7bd7a09
-LiquidityManager : https://eth-sepolia.blockscout.com/address/0x87B8A985EBE3B44E6eF06fA938bD8B4202DDD2dF
-FactoryTokenContract : https://eth-sepolia.blockscout.com/address/0x4C43423d55dBa56370448468096cEA3B3cC2e88A
+- MultiSigContract : https://eth-sepolia.blockscout.com/address/0xa9313f26c6493a9D10F2bF8E7Ba5da6210D7D012
+- VestingContract : https://eth-sepolia.blockscout.com/address/0x8c560AE44b89A7bE962486fd1d4316B688baF8C2
+- LiquidityManager : https://eth-sepolia.blockscout.com/address/0xD9C0269b0d6a8200f10c2A9A0A85bA400761befD
+- FactoryTokenContract : https://eth-sepolia.blockscout.com/address/0xa2a60468c228c363dB665d0016B6E5002efb835A
 
 ## Project Architecture
 
