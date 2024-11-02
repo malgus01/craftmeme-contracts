@@ -20,7 +20,7 @@ contract CollateralSafekeepTest is StdCheats, Test, Script {
         vm.startPrank(owner);
         hc = new HelperConfig();
         msc = new MultiSigContract(hc.getBaseSepoliaConfig().ispAddress, hc.getBaseSepoliaConfig().signatureSchemaId);
-        ftc = new FactoryTokenContract(address(msc), address(lm), owner);
+        ftc = new FactoryTokenContract(address(msc), address(lm), hc.getAnvilConfig().USDC, owner);
         msc.setFactoryTokenContract(address(ftc));
         vm.stopPrank();
     }

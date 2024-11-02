@@ -33,7 +33,7 @@ contract DeployAndTest is Script {
         console2.log("LiquidityManager deployed at:", address(lm));
 
         // Step 4: Deploy FactoryTokenContract and set in MultiSigContract
-        ftc = new FactoryTokenContract(address(msc), address(lm), msg.sender);
+        ftc = new FactoryTokenContract(address(msc), address(lm), hc.getBaseSepoliaConfig().USDC, msg.sender);
         console2.log("FactoryTokenContract deployed at:", address(ftc));
         msc.setFactoryTokenContract(address(ftc));
 

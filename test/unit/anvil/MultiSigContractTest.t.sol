@@ -23,7 +23,7 @@ contract MultiSigContractTest is StdCheats, Test, Script {
         hc = new HelperConfig();
         msc = new MultiSigContract(hc.getAnvilConfig().ispAddress, hc.getAnvilConfig().signatureSchemaId);
         lm = new LiquidityManager(address(hc.getAnvilConfig().poolManager), address(0));
-        ftc = new FactoryTokenContract(address(msc), address(lm), owner);
+        ftc = new FactoryTokenContract(address(msc), address(lm), hc.getAnvilConfig().USDC, owner);
 
         msc.setFactoryTokenContract(address(ftc));
 

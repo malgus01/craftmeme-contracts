@@ -7,14 +7,12 @@ import { MultiSigContract } from "./MultiSigContract.sol";
 import { LiquidityManager } from "./LiquidityManager.sol";
 
 /**
- * @title FactoryTokenContract
- * @author CraftMeme
- * @notice Manages the creation of meme tokens with liquidity on Uniswap and secures transactions with a
- * MultiSigContract.
- * @dev Includes persistent storage for token creation transactions.
- * The MultiSigContract has volatile storage and only retains transaction data until the transaction is executed.
- * After execution, transaction data is accessible in this contract.
- * @dev Designed for CraftMeme, developed for a next-gen meme coin launchpad.
+ * @title FactoryTokenContract.
+ * @author CraftMeme.
+ * @notice A contract that creates new memecoin tokens and Uniswap liquidity pools for that tokens.
+ * @dev Has persistant storage, MultiSigContract has volatile storage.
+ * @dev This means past signed txs data is available in this contract for more functions
+ * after tx is executed.
  */
 contract FactoryTokenContract is Ownable {
     ////////////////////
@@ -27,15 +25,9 @@ contract FactoryTokenContract is Ownable {
     error EmptyName();
     error EmptySymbol();
 
-    //////////////////////
-    // State variables //
-    ////////////////////
-    /// @notice MultiSigContract address
-    MultiSigContract public multiSigContract;
-    /// @notice LiquidityManager address
-    LiquidityManager public liquidityManager;
-
-    /// @notice struct to store tx data
+    /**
+     * @notice Structs.
+     */
     struct TxData {
         uint256 txId;
         address owner;
@@ -52,22 +44,23 @@ contract FactoryTokenContract is Ownable {
         string ipfsHash;
     }
 
-    /// @notice array to store tx data
+    /**
+     * @notice Variables.
+     */
+    MultiSigContract public multiSigContract;
+    LiquidityManager public liquidityManager;
     TxData[] public txArray;
+    uint256 public TX_ID;
+    address public USDC_ADDRESS;
 
-    /// @notice next tx id
-    uint256 TX_ID;
-
-    /// @notice USDC address
-    address private USDC_ADDRESS;
-
-    /// @notice owner to tx id mapping
+    /**
+     * @notice Mappings.
+     */
     mapping(address => uint256) public ownerToTxId;
 
-    /////////////
-    // Events //
-    ///////////
-    /// @notice Emit when a new tx is queued
+    /**
+     * @notice Events.
+     */
     event TransactionQueued(
         uint256 indexed txId, address indexed owner, address[] signers, string tokenName, string tokenSymbol
     );
@@ -77,7 +70,9 @@ contract FactoryTokenContract is Ownable {
         address indexed owner, address indexed tokenAddress, string indexed name, string symbol, uint256 supply
     );
 
-    /// @notice modifier to ensure only the MultiSigContract can call this function
+    /**
+     * @notice Modifiers.
+     */
     modifier onlyMultiSigContract() {
         require(msg.sender == address(multiSigContract), FactoryTokenContract__onlyMultiSigContract());
         _;
@@ -89,16 +84,14 @@ contract FactoryTokenContract is Ownable {
         _;
     }
 
-    ////////////////
-    // Functions //
-    //////////////
-    /**
-     * @notice Deploys FactoryTokenContract with designated MultiSig and LiquidityManager contracts.
-     * @param _multiSigContract The address of the MultiSigContract for transaction approval.
-     * @param _liquidityManager The address of the LiquidityManager for liquidity operations.
-     * @param initialOwner The initial owner of this contract.
-     */
-    constructor(address _multiSigContract, address _liquidityManager, address initialOwner) Ownable(initialOwner) {
+    constructor(
+        address _multiSigContract,
+        address _liquidityManager,
+        address _USDC,
+        address initialOwner
+    )
+        Ownable(initialOwner)
+    {
         multiSigContract = MultiSigContract(_multiSigContract);
         liquidityManager = LiquidityManager(_liquidityManager);
         TxData memory constructorTx = TxData({
@@ -119,6 +112,7 @@ contract FactoryTokenContract is Ownable {
         txArray.push(constructorTx);
         ownerToTxId[address(0)] = 0;
         TX_ID = 1;
+        USDC_ADDRESS = _USDC;
     }
 
     /**
@@ -190,17 +184,8 @@ contract FactoryTokenContract is Ownable {
     }
 
     /**
-     * @dev Internal function to queue a transaction for creating a meme token.
-     * @param _signers List of signers for the MultiSig approval.
-     * @param _owner Address of the token owner.
-     * @param _tokenName Name of the token.
-     * @param _tokenSymbol Symbol of the token.
-     * @param _totalSupply Initial supply of the token.
-     * @param _maxSupply Maximum supply if supply cap is enabled.
-     * @param _canMint Specifies if the token is mintable.
-     * @param _canBurn Specifies if the token is burnable.
-     * @param _supplyCapEnabled Specifies if the supply cap is enforced.
-     * @return txId The transaction ID.
+     * @notice Handles the internal queuing of memecoin creation, waiting for signatures.
+     * @return txId data of the transaction
      */
     function _handleQueue(
         address[] memory _signers,
@@ -241,10 +226,10 @@ contract FactoryTokenContract is Ownable {
     }
 
     /**
-     * @dev Internal function that creates a meme token once the MultiSig approval is complete.
-     * Initializes a Uniswap pool for the newly created token.
-     * @param _txId The ID of the transaction to execute.
-     * @return newToken The address of the newly created token contract.
+     *
+     * @param _txId Id of the transaction.
+     * @dev Creates a new memecoin and initializes the liquidity pool for it.
+     * @return newToken ERC20 memecoin.
      */
     function _createMemecoin(uint256 _txId) internal returns (TokenContract newToken) {
         TxData memory txData = txArray[_txId];
@@ -276,27 +261,16 @@ contract FactoryTokenContract is Ownable {
     }
 
     /**
-     * @param _liquidityManager The address of the liquidity manager.
-     * @dev This can only be called by the contract owner.
      * @notice Updates the address of the liquidity manager.
+     * @param _liquidityManager Address of the liquidity manager.
      */
     function updateLiquidityManager(address _liquidityManager) external onlyOwner {
         liquidityManager = LiquidityManager(_liquidityManager);
     }
 
     /**
-     * @dev Returns the address of the USDC contract.
-     * @return USDC_ADDRESS The address of the USDC contract.
-     * @notice Returns the address of the USDC contract.
-     */
-    function getUSDCAddress() public view returns (address) {
-        return USDC_ADDRESS;
-    }
-
-    /**
-     * @dev Returns the array of transactions.
-     * @return txArray The array of transactions.
      * @notice Returns the array of transactions.
+     * @return TxData[].
      */
     function getTokenArray() public view returns (TxData[] memory) {
         return txArray;
