@@ -1,6 +1,6 @@
 # CraftMeme 🚀
 
-Welcome to MemeCoin Launchpad, a decentralized platform where users can create and launch their own ERC-20 memecoins, provide liquidity via Uniswap, and enjoy safe, controlled token vesting to minimize potential bad actors in the space. This project was built for the QuickNode Hackathon and uses QuickNode Functions to streamline operations and ensure smooth user experience.
+Welcome to MemeCoin Launchpad, a decentralized platform where users can create and launch their own ERC-20 memecoins, provide liquidity via Uniswap, and enjoy safe, controlled token vesting to minimize potential bad actors in the space. This project was built for the QuickNode Hackathon and utilizes various QuickNode services to streamline operations and ensure a smooth user experience.
 
 <p align="center">
 <img src="./images/CraftMeme.webp" width="500" alt="Name">
@@ -8,7 +8,8 @@ Welcome to MemeCoin Launchpad, a decentralized platform where users can create a
 
 - [CraftMeme 🚀](#craftmeme-)
   - [Overview](#overview)
-  - [Deployed Contracts](#deployed-contracts)
+  - [Deployed Contracts on Base Sepolia](#deployed-contracts-on-base-sepolia)
+  - [Deployed Contracts on ETH Sepolia](#deployed-contracts-on-eth-sepolia)
   - [Project Architecture](#project-architecture)
   - [Core Features](#core-features)
     - [ERC-20 Factory](#erc-20-factory)
@@ -18,21 +19,26 @@ Welcome to MemeCoin Launchpad, a decentralized platform where users can create a
     - [Multisignature Governance](#multisignature-governance)
       - [Security Features](#security-features)
   - [Technology Stack](#technology-stack)
-  - [Usage of QuickNode Functions](#usage-of-quicknode-functions)
-  - [Usage of QuickNode Streams](#usage-of-quicknode-streams)
-  - [Marketplace Addons](#marketplace-addons)
+  - [QuickNode Integrations](#quicknode-integrations)
+    - [QuickNode RPCs](#quicknode-rpcs)
+    - [QuickNode Alerts](#quicknode-alerts)
+    - [QuickNode IPFS Pinning](#quicknode-ipfs-pinning)
+    - [Sign Protocol Attestations and Schemas](#sign-protocol-attestations-and-schemas)
   - [Smart Contracts](#smart-contracts)
     - [Factory Contract](#factory-contract)
     - [Vesting Contract](#vesting-contract)
     - [Multisig Contract](#multisig-contract)
   - [Potential Future Enhancements](#potential-future-enhancements)
+  - [Future Scope](#future-scope)
+    - [Enhanced QuickNode Integrations](#enhanced-quicknode-integrations)
+    - [Multi-chain Expansion](#multi-chain-expansion)
   - [License](#license)
 
 ## Overview
 
 MemeCoin Launchpad is designed to be a simple, secure, and user-friendly platform where users can create and launch ERC-20 meme tokens, provide liquidity via Uniswap, and ensure fair distribution using a vesting mechanism. Our goal is to build a reliable launchpad for meme tokens that not only enables users to create and trade tokens but also prevents bad actors from executing rugpulls or scams.
 
-This platform integrates with QuickNode Functions, Uniswap, and OpenZeppelin libraries to provide a seamless token creation and liquidity experience.
+This platform integrates with QuickNode services, Uniswap, and OpenZeppelin libraries to provide a seamless token creation and liquidity experience.
 
 ## Deployed Contracts on Base Sepolia
 
@@ -105,35 +111,32 @@ For added security, meme tokens created on the platform will have multisignature
 
 ## Technology Stack
 
-- Smart Contracts: Solidity, OpenZeppelin ERC-20
-- Uniswap V3: Liquidity pool creation and token swapping
-- QuickNode Functions: For off-chain operations and API calls
-- QuickNode Streams: For real-time data related to token liquidity and trades
+- Smart Contracts: Solidity, OpenZeppelin ERC-20, Sign Protocol
+- Uniswap V4: Liquidity pool creation and token swapping
+- Blockscout: Smart Contract Deployment and Verifications
+- QuickNode Services: Various integrations for enhanced functionality (IPFS Pinning, RPCs, etc.)
 - Frontend: Next.js, Wagmi for interacting with smart contracts
 - Testnets: Ethereum Sepolia, Base Sepolia for development and testing
 
-## Usage of QuickNode Functions
+## QuickNode Integrations
 
-We utilize QuickNode Functions to offload several key backend operations, including:
+Our platform leverages several QuickNode services to enhance functionality and security:
 
-- Creating API tools for real-time liquidity data and Uniswap price feeds.
-- Automating off-chain processes like token distribution schedules and vesting mechanics.
-- Reducing the workload on smart contracts by running heavy computations off-chain.
+### QuickNode RPCs
 
-## Usage of QuickNode Streams
+We utilize QuickNode RPCs for fast and reliable blockchain interactions, enabling efficient communication between our frontend and smart contracts.
 
-We leverage QuickNode Streams to gather real-time liquidity data and trade information from Uniswap. Our platform uses these streams to:
+### QuickNode Alerts
 
-- Provide users with updates on token liquidity and price movements.
-- Alert users when a memetoken reaches its liquidity threshold.
-- Automatically trigger the unlocking of vested tokens based on time schedules.
+We integrate QuickNode Alerts to track wallet activities and important events on the blockchain, providing real-time monitoring and notifications for critical transactions.
 
-## Marketplace Addons
+### QuickNode IPFS Pinning
 
-We integrated QuickNode Marketplace addons to enhance the functionality and security of our platform, including:
+We use QuickNode IPFS Pinning to store and serve metadata associated with meme tokens, ensuring persistent and decentralized storage of token information.
 
-- QuickNode Analytics for tracking token metrics.
-- QuickNode Alerts for sending real-time notifications when tokens reach key milestones, such as liquidity thresholds or vesting completions.
+### Sign Protocol Attestations and Schemas
+
+We incorporate Sign Protocol Attestations and Schemas to verify user identities and ensure the authenticity of transactions, adding an extra layer of security to our platform.
 
 ## Smart Contracts
 
@@ -167,6 +170,38 @@ Provides security for memetoken owners by requiring multiple approvals for sensi
 - Staking: Introduce staking pools where memecoin holders can earn rewards for holding their tokens.
 - Cross-chain Support: Expand to other blockchains (e.g., Polygon, BSC) to widen the reach of meme tokens.
 - Governance: Allow memetoken holders to vote on project-related decisions using a decentralized governance model.
+
+## Future Scope
+
+As we continue to develop and expand CraftMeme, we plan to incorporate more advanced QuickNode integrations and transition to a multi-chain architecture. Our future plans include:
+
+### Enhanced QuickNode Integrations
+
+1. **QuickNode Streams**: Implement real-time data streaming to provide instant updates on token liquidity, trades, and wallet activities. This will enable features like:
+   - Real-time price tracking
+   - Instant notifications for significant events (e.g., liquidity threshold reached, large transactions)
+   - Dynamic dashboard updates reflecting the latest blockchain data
+
+2. **QuickNode Functions**: Leverage serverless computing to offload complex calculations and automate processes, including:
+   - Advanced analytics and market trend analysis
+   - Automated smart contract interactions
+   - Customizable transaction processing workflows
+
+3. **QuickNode Alerts**: Expand our alert system to cover a wider range of events and conditions, allowing for:
+   - Customizable notification triggers based on user preferences
+   - Multi-channel alerts (webhook, email, mobile push notifications)
+   - Advanced filtering and prioritization of alerts
+
+### Multi-chain Expansion
+
+We aim to extend CraftMeme's functionality across multiple blockchain networks, providing:
+
+1. **Cross-chain Token Creation**: Enable users to create meme tokens on multiple chains simultaneously.
+2. **Interoperability Features**: Implement cross-chain swaps and transfers for meme tokens.
+3. **Chain Agnostic Wallet Management**: Develop a unified interface for managing meme tokens across different blockchain networks.
+4. **Multi-chain Analytics**: Provide comprehensive analytics and insights aggregated from multiple blockchain sources.
+
+These enhancements will transform CraftMeme into a robust, multi-chain platform for creating, trading, and managing meme tokens, offering unparalleled flexibility and functionality in the Web3 ecosystem.
 
 ## License
 
