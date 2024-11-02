@@ -15,9 +15,9 @@ import {LiquidityManager} from "./LiquidityManager.sol";
  * after tx is executed.
  */
 contract FactoryTokenContract is Ownable {
-    /**
-     * @notice Errors.
-     */
+    ////////////////////
+    // Custom Errors //
+    //////////////////
     error FactoryTokenContract__onlyMultiSigContract();
     error TransactionAlreadyExecuted();
     error InvalidSignerCount();
@@ -69,6 +69,7 @@ contract FactoryTokenContract is Ownable {
         string tokenSymbol
     );
 
+    /// @notice Emit when a new token is created
     event MemecoinCreated(
         address indexed owner,
         address indexed tokenAddress,
@@ -88,6 +89,7 @@ contract FactoryTokenContract is Ownable {
         _;
     }
 
+    /// @notice modifier to ensure only pending txs can be executed
     modifier onlyPendigTx(uint256 _txId) {
         require(txArray[_txId].isPending, TransactionAlreadyExecuted());
         _;
@@ -123,14 +125,18 @@ contract FactoryTokenContract is Ownable {
     }
 
     /**
-     * @notice Only adds a pending tx to create a new memecoin.
-     * @notice Tx is completed when all of the signers approve the tx in the MultiSigContract.
-     * @dev Creates a new pending tx in MultiSigContract.
-     * @dev When all the signers complete the signature in MultiSigContract, the MSC calls executeTx()
-     * to complete the tx and create a new memecoin.
-     * @dev This function does not add any liquidity or such, that is done by separate functions.
-     * @dev One memecoin can only have one on paper owner, but the other owner's data is always saved
-     * in this contract.
+     * @notice Creates a pending transaction to initialize a new meme token.
+     * @dev Actual token creation happens once the MultiSigContract approves the transaction.
+     * @param _signers The list of signers required to approve this transaction in the MultiSigContract.
+     * @param _owner The address of the token owner.
+     * @param _tokenName The name of the token to be created.
+     * @param _tokenSymbol The symbol of the token to be created.
+     * @param _totalSupply The initial token supply.
+     * @param _maxSupply The maximum token supply, if a cap is enabled.
+     * @param _canMint Whether the token has minting capabilities.
+     * @param _canBurn Whether the token has burning capabilities.
+     * @param _supplyCapEnabled Whether the token has a supply cap.
+     * @return txId The ID of the newly created transaction.
      */
     function queueCreateMemecoin(
         address[] memory _signers,
@@ -166,9 +172,9 @@ contract FactoryTokenContract is Ownable {
     }
 
     /**
-     * @notice Executes the pending tx in MultiSigContract after all signers have signed the tx.
-     * @notice Memecoin has been created when this function is called.
-     * @dev This function is only callable by the MultiSigContract.
+     * @notice Completes the pending transaction to create the meme token after MultiSigContract approval.
+     * @param _txId The ID of the transaction to be executed.
+     * @dev Callable only by the MultiSigContract once all required signatures are collected.
      */
     function executeCreateMemecoin(
         uint256 _txId
@@ -177,9 +183,9 @@ contract FactoryTokenContract is Ownable {
     }
 
     /**
-     * @notice Gets the tx data of a transaction
-     * @param _txId data of the transaction
-     * @return TxData memory
+     * @notice Fetches transaction data for a given transaction ID.
+     * @param _txId The ID of the transaction to fetch.
+     * @return TxData memory The transaction data for the specified ID.
      */
     function getTxData(uint256 _txId) external view returns (TxData memory) {
         return txArray[_txId];
