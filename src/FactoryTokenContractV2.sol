@@ -10,4 +10,4 @@ import { MultiSigContract } from "./MultiSigContract.sol";
 import { LiquidityManager } from "./LiquidityManager.sol";
 import { VestingContract } from "./VestingContract.sol";
 
-contract FactoryTokenContractV2 {}
+contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {}
