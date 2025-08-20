@@ -16,4 +16,24 @@ import { VestingContract } from "./VestingContract.sol";
  * @notice An improved contract for creating memecoin tokens with enhanced security and features
  * @dev Includes reentrancy protection, pausability, better gas optimization, and comprehensive validation
  */
-contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {}
+contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
+    ////////////////////
+    // Custom Errors //
+    //////////////////
+    error FactoryTokenContract__OnlyMultiSigContract();
+    error FactoryTokenContract__TransactionAlreadyExecuted();
+    error FactoryTokenContract__InvalidSignerCount();
+    error FactoryTokenContract__InvalidSupply();
+    error FactoryTokenContract__EmptyName();
+    error FactoryTokenContract__EmptySymbol();
+    error FactoryTokenContract__InvalidOwner();
+    error FactoryTokenContract__InvalidIPFSHash();
+    error FactoryTokenContract__TransactionNotFound();
+    error FactoryTokenContract__InvalidAddress();
+    error FactoryTokenContract__DuplicateSigner();
+    error FactoryTokenContract__NameTooLong();
+    error FactoryTokenContract__SymbolTooLong();
+    error FactoryTokenContract__TotalSupplyTooHigh();
+    error FactoryTokenContract__InsufficientLiquidity();
+
+}
