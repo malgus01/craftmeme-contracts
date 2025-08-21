@@ -36,4 +36,15 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     error FactoryTokenContract__TotalSupplyTooHigh();
     error FactoryTokenContract__InsufficientLiquidity();
 
+    ////////////////////
+    // State Variables //
+    ///////////////////
+    
+    /// @notice Maximum values for validation
+    uint256 public constant MAX_SIGNERS = 10;
+    uint256 public constant MIN_SIGNERS = 2;
+    uint256 public constant MAX_NAME_LENGTH = 50;
+    uint256 public constant MAX_SYMBOL_LENGTH = 10;
+    uint256 public constant MAX_TOTAL_SUPPLY = 1e15 * 1e18; // 1 quadrillion tokens max
+    uint256 public constant MIN_LIQUIDITY_THRESHOLD = 20 * 1e6; // 20 USDC (assuming 6 decimals)
 }
