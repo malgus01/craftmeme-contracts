@@ -36,4 +36,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     error FactoryTokenContract__TotalSupplyTooHigh();
     error FactoryTokenContract__InsufficientLiquidity();
 
+    ////////////////////
+    // State Variables //
+    ///////////////////
+    
+    /// @notice Maximum values for validation
+    
+
 }
