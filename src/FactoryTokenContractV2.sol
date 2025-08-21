@@ -41,6 +41,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ///////////////////
     
     /// @notice Maximum values for validation
-    
+    uint256 public constant MAX_SIGNERS = 10;
+
 
 }
