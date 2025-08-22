@@ -48,6 +48,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     uint256 public constant MAX_TOTAL_SUPPLY = 1e15 * 1e18; // 1 quadrillion tokens max
     uint256 public constant MIN_LIQUIDITY_THRESHOLD = 20 * 1e6; // 20 USDC (assuming 6 decimals)
 
+    /// @notice Fee configuration
     uint256 public creationFee = 0.001 ether; // Fee in ETH for creating tokens
     address public feeRecipient;
 
