@@ -74,4 +74,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 executedAt;
         uint256 liquidityProvided;
     }
+
+    struct LiquidityInfo {
+        uint256 totalLiquidity;
+        bool thresholdMet;
+        address[] contributors;
+        mapping(address => uint256) contributions;
+    }
 }
