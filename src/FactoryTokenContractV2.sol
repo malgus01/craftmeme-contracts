@@ -75,6 +75,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 liquidityProvided;
     }
 
+    /**
+     * @notice Liquidity threshold tracking
+     */
     struct LiquidityInfo {
         uint256 totalLiquidity;
         bool thresholdMet;
