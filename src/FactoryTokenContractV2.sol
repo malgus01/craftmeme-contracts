@@ -52,4 +52,23 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     uint256 public creationFee = 0.001 ether; // Fee in ETH for creating tokens
     address public feeRecipient;
 
+    struct TransactionData {
+        uint256 txId;
+        address owner;
+        address[] signers;
+        bool isPending;
+        bool isExecuted;
+        string tokenName;
+        string tokenSymbol;
+        uint256 totalSupply;
+        uint256 maxSupply;
+        bool canMint;
+        bool canBurn;
+        bool supplyCapEnabled;
+        address tokenAddress;
+        string ipfsHash;
+        uint256 createdAt;
+        uint256 executedAt;
+        uint256 liquidityProvided;
+    }
 }
