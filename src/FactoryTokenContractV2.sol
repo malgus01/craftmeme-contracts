@@ -52,6 +52,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     uint256 public creationFee = 0.001 ether; // Fee in ETH for creating tokens
     address public feeRecipient;
 
+    /**
+     * @notice Enhanced transaction data structure
+     */
     struct TransactionData {
         uint256 txId;
         address owner;
