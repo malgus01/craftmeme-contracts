@@ -92,4 +92,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice All transactions
     TransactionData[] public transactions;
 
+    mapping(address => uint256[]) public ownerToTxIds;
+
+
 }
