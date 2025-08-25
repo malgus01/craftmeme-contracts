@@ -131,4 +131,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 totalLiquidity,
         uint256 timestamp
     );
+
+    event CreationFeeUpdated(uint256 oldFee, uint256 newFee);
+
 }
