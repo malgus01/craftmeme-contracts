@@ -109,4 +109,13 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         string tokenSymbol,
         uint256 timestamp
     );
+
+    event MemecoinCreated(
+        address indexed owner,
+        address indexed tokenAddress,
+        string indexed name,
+        string symbol,
+        uint256 supply,
+        uint256 timestamp
+    );
 }
