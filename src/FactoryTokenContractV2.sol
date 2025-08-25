@@ -125,4 +125,10 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 amount,
         uint256 timestamp
     );
+
+    event LiquidityThresholdMet(
+        address indexed token,
+        uint256 totalLiquidity,
+        uint256 timestamp
+    );
 }
