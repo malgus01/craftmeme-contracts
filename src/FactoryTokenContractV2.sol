@@ -136,4 +136,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     event FeeRecipientUpdated(address oldRecipient, address newRecipient);
     event ContractUpgraded(string component, address oldAddress, address newAddress);
 
+    ////////////////////
+    // Modifiers //
+    ///////////////////
 }
