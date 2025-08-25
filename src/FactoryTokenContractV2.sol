@@ -98,5 +98,45 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     mapping(address => LiquidityInfo) public tokenLiquidity;
     mapping(address => address) public tokenToOwner;
 
+    ////////////////////
+    // Events //
+    ///////////////////
+    event TransactionQueued(
+        uint256 indexed txId,
+        address indexed owner,
+        address[] signers,
+        string tokenName,
+        string tokenSymbol,
+        uint256 timestamp
+    );
 
+    event MemecoinCreated(
+        address indexed owner,
+        address indexed tokenAddress,
+        string indexed name,
+        string symbol,
+        uint256 supply,
+        uint256 timestamp
+    );
+
+    event LiquidityProvided(
+        address indexed token,
+        address indexed provider,
+        uint256 amount,
+        uint256 timestamp
+    );
+
+    event LiquidityThresholdMet(
+        address indexed token,
+        uint256 totalLiquidity,
+        uint256 timestamp
+    );
+
+    event CreationFeeUpdated(uint256 oldFee, uint256 newFee);
+    event FeeRecipientUpdated(address oldRecipient, address newRecipient);
+    event ContractUpgraded(string component, address oldAddress, address newAddress);
+
+    ////////////////////
+    // Modifiers //
+    ///////////////////
 }
