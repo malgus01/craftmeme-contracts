@@ -101,4 +101,12 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Events //
     ///////////////////
+    event TransactionQueued(
+        uint256 indexed txId,
+        address indexed owner,
+        address[] signers,
+        string tokenName,
+        string tokenSymbol,
+        uint256 timestamp
+    );
 }
