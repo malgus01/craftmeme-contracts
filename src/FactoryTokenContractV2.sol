@@ -118,4 +118,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 supply,
         uint256 timestamp
     );
+
+    event LiquidityProvided(
+        address indexed token,
+        address indexed provider,
+        uint256 amount,
+        uint256 timestamp
+    );
 }
