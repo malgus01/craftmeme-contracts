@@ -139,4 +139,84 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Modifiers //
     ///////////////////
+
+    modifier onlyMultiSigContract() {
+        if (msg.sender != address(multiSigContract)) {
+            revert FactoryTokenContract__OnlyMultiSigContract();
+        }
+        _;
+    }
+
+    modifier onlyPendingTx(uint256 _txId) {
+        if (_txId >= transactions.length || !transactions[_txId].isPending) {
+            revert FactoryTokenContract__TransactionAlreadyExecuted();
+        }
+        _;
+    }
+
+    modifier validTxId(uint256 _txId) {
+        if (_txId >= transactions.length) {
+            revert FactoryTokenContract__TransactionNotFound();
+        }
+        _;
+    }
+
+    modifier onlyValidOwner(address _owner) {
+        if (_owner == address(0)) {
+            revert FactoryTokenContract__InvalidOwner();
+        }
+        _;
+    }
+
+    ////////////////////
+    // Constructor //
+    ///////////////////
+
+    constructor(
+        address _multiSigContract,
+        address _liquidityManager,
+        address _vestingContract,
+        address _usdc,
+        address _feeRecipient,
+        address _initialOwner
+    ) Ownable(_initialOwner) {
+        if (_multiSigContract == address(0) || 
+            _liquidityManager == address(0) || 
+            _vestingContract == address(0) ||
+            _usdc == address(0) || 
+            _feeRecipient == address(0)) {
+            revert FactoryTokenContract__InvalidAddress();
+        }
+
+        multiSigContract = MultiSigContract(_multiSigContract);
+        liquidityManager = LiquidityManager(_liquidityManager);
+        vestingContract = VestingContract(_vestingContract);
+        USDC = IERC20(_usdc);
+        feeRecipient = _feeRecipient;
+
+        // Initialize with dummy transaction at index 0 for easier indexing
+        transactions.push(TransactionData({
+            txId: 0,
+            owner: address(0),
+            signers: new address[](0),
+            isPending: false,
+            isExecuted: false,
+            tokenName: "",
+            tokenSymbol: "",
+            totalSupply: 0,
+            maxSupply: 0,
+            canMint: false,
+            canBurn: false,
+            supplyCapEnabled: false,
+            tokenAddress: address(0),
+            ipfsHash: "",
+            createdAt: block.timestamp,
+            executedAt: 0,
+            liquidityProvided: 0
+        }));
+    }
+
+    ////////////////////
+    // External Functions //
+    ////////////////////
 }
