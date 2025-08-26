@@ -146,4 +146,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
+
+    modifier onlyPendingTx(uint256 _txId) {
+        if (_txId >= transactions.length || !transactions[_txId].isPending) {
+            revert FactoryTokenContract__TransactionAlreadyExecuted();
+        }
+        _;
+    }
 }
