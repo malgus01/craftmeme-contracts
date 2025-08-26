@@ -160,4 +160,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
+
+    modifier onlyValidOwner(address _owner) {
+        if (_owner == address(0)) {
+            revert FactoryTokenContract__InvalidOwner();
+        }
+        _;
+    }
 }
