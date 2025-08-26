@@ -220,6 +220,20 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     // External Functions //
     ////////////////////
 
+    /**
+     * @notice Creates a pending transaction to initialize a new meme token
+     * @param _signers Array of addresses that need to sign the transaction
+     * @param _owner Address of the token owner
+     * @param _tokenName Name of the token
+     * @param _tokenSymbol Symbol of the token
+     * @param _totalSupply Initial token supply
+     * @param _maxSupply Maximum token supply (if cap enabled)
+     * @param _canMint Whether token can be minted
+     * @param _canBurn Whether token can be burned
+     * @param _supplyCapEnabled Whether supply cap is enabled
+     * @param _ipfsHash IPFS hash for token metadata
+     * @return txId The ID of the created transaction
+     */
     function queueCreateMemecoin(
         address[] memory _signers,
         address _owner,
