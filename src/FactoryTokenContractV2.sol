@@ -219,4 +219,57 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // External Functions //
     ////////////////////
+
+    function queueCreateMemecoin(
+        address[] memory _signers,
+        address _owner,
+        string memory _tokenName,
+        string memory _tokenSymbol,
+        uint256 _totalSupply,
+        uint256 _maxSupply,
+        bool _canMint,
+        bool _canBurn,
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
+    )
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        onlyValidOwner(_owner)
+        returns (uint256 txId)
+    {
+        // Validate fee payment
+        if (msg.value < creationFee) {
+            revert FactoryTokenContract__InsufficientLiquidity();
+        }
+
+        // Validate input parameters
+        _validateTokenParameters(_signers, _tokenName, _tokenSymbol, _totalSupply, _maxSupply, _supplyCapEnabled, _ipfsHash);
+
+        // Create transaction
+        txId = _createTransaction(
+            _signers,
+            _owner,
+            _tokenName,
+            _tokenSymbol,
+            _totalSupply,
+            _maxSupply,
+            _canMint,
+            _canBurn,
+            _supplyCapEnabled,
+            _ipfsHash
+        );
+
+        // Queue in multisig contract
+        multiSigContract.queueTx(txId, _owner, _signers);
+
+        // Transfer fee
+        if (msg.value > 0) {
+            (bool success, ) = feeRecipient.call{value: msg.value}("");
+            require(success, "Fee transfer failed");
+        }
+
+        emit TransactionQueued(txId, _owner, _signers, _tokenName, _tokenSymbol, block.timestamp);
+    }
 }
