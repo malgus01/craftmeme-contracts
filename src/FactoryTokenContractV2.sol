@@ -139,4 +139,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Modifiers //
     ///////////////////
+
+    modifier onlyMultiSigContract() {
+        if (msg.sender != address(multiSigContract)) {
+            revert FactoryTokenContract__OnlyMultiSigContract();
+        }
+        _;
+    }
 }
