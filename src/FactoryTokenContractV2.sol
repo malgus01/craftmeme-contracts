@@ -167,4 +167,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
+
+    ////////////////////
+    // Constructor //
+    ///////////////////
 }
