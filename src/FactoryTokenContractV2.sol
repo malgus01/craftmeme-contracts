@@ -287,6 +287,10 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         emit TransactionQueued(txId, _owner, _signers, _tokenName, _tokenSymbol, block.timestamp);
     }
 
+    /**
+     * @notice Executes a pending transaction after multisig approval
+     * @param _txId ID of the transaction to execute
+     */
     function executeCreateMemecoin(uint256 _txId) 
         external 
         onlyMultiSigContract 
