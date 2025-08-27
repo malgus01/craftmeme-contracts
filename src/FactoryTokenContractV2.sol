@@ -286,4 +286,43 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
 
         emit TransactionQueued(txId, _owner, _signers, _tokenName, _tokenSymbol, block.timestamp);
     }
+
+    /**
+     * @notice Executes a pending transaction after multisig approval
+     * @param _txId ID of the transaction to execute
+     */
+    function executeCreateMemecoin(uint256 _txId) 
+        external 
+        onlyMultiSigContract 
+        onlyPendingTx(_txId) 
+        nonReentrant 
+    {
+        TransactionData storage txData = transactions[_txId];
+        
+        // Create the token
+        TokenContract newToken = _deployToken(txData);
+        
+        // Update transaction status
+        txData.isPending = false;
+        txData.isExecuted = true;
+        txData.tokenAddress = address(newToken);
+        txData.executedAt = block.timestamp;
+        
+        // Update tracking
+        isTokenCreated[address(newToken)] = true;
+        tokenToOwner[address(newToken)] = txData.owner;
+        totalTokensCreated++;
+        
+        // Initialize liquidity pool
+        _initializeLiquidityPool(address(newToken));
+        
+        emit MemecoinCreated(
+            txData.owner, 
+            address(newToken), 
+            txData.tokenName, 
+            txData.tokenSymbol, 
+            txData.totalSupply,
+            block.timestamp
+        );
+    }
 }
