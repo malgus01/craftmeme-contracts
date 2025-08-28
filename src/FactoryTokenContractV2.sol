@@ -325,4 +325,36 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
             block.timestamp
         );
     }
+
+    function provideLiquidity(address _tokenAddress, uint256 _usdcAmount) 
+        external 
+        nonReentrant 
+        whenNotPaused 
+    {
+        if (!isTokenCreated[_tokenAddress]) {
+            revert FactoryTokenContract__InvalidAddress();
+        }
+
+        // Transfer USDC from user
+        USDC.transferFrom(msg.sender, address(this), _usdcAmount);
+        
+        // Update liquidity tracking
+        LiquidityInfo storage liquidityInfo = tokenLiquidity[_tokenAddress];
+        
+        if (liquidityInfo.contributions[msg.sender] == 0) {
+            liquidityInfo.contributors.push(msg.sender);
+        }
+        
+        liquidityInfo.contributions[msg.sender] += _usdcAmount;
+        liquidityInfo.totalLiquidity += _usdcAmount;
+        
+        // Check if threshold is met
+        if (!liquidityInfo.thresholdMet && liquidityInfo.totalLiquidity >= MIN_LIQUIDITY_THRESHOLD) {
+            liquidityInfo.thresholdMet = true;
+            emit LiquidityThresholdMet(_tokenAddress, liquidityInfo.totalLiquidity, block.timestamp);
+        }
+        
+        emit LiquidityProvided(_tokenAddress, msg.sender, _usdcAmount, block.timestamp);
+    }
+
 }
