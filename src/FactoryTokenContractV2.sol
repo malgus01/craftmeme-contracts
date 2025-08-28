@@ -362,4 +362,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         emit LiquidityProvided(_tokenAddress, msg.sender, _usdcAmount, block.timestamp);
     }
 
+    ////////////////////
+    // View Functions //
+    ////////////////////
 }
