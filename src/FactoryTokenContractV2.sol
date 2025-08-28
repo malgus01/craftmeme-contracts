@@ -326,6 +326,11 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         );
     }
 
+    /**
+     * @notice Provides liquidity for a token
+     * @param _tokenAddress Address of the token
+     * @param _usdcAmount Amount of USDC to provide
+     */
     function provideLiquidity(address _tokenAddress, uint256 _usdcAmount) 
         external 
         nonReentrant 
