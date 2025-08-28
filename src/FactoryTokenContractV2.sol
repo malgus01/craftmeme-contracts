@@ -362,4 +362,16 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         emit LiquidityProvided(_tokenAddress, msg.sender, _usdcAmount, block.timestamp);
     }
 
+    ////////////////////
+    // View Functions //
+    ////////////////////
+
+    /**
+     * @notice Get transaction data by ID
+     * @param _txId Transaction ID
+     * @return Transaction data
+     */
+    function getTransaction(uint256 _txId) external view validTxId(_txId) returns (TransactionData memory) {
+        return transactions[_txId];
+    }
 }
