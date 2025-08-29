@@ -374,4 +374,13 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     function getTransaction(uint256 _txId) external view validTxId(_txId) returns (TransactionData memory) {
         return transactions[_txId];
     }
+
+    /**
+     * @notice Get all transactions for an owner
+     * @param _owner Owner address
+     * @return Array of transaction IDs
+     */
+    function getOwnerTransactions(address _owner) external view returns (uint256[] memory) {
+        return ownerToTxIds[_owner];
+    }
 }
