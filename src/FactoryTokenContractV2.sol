@@ -383,4 +383,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     function getOwnerTransactions(address _owner) external view returns (uint256[] memory) {
         return ownerToTxIds[_owner];
     }
+
+    function getTotalTransactions() external view returns (uint256) {
+        return transactions.length;
+    }
 }
