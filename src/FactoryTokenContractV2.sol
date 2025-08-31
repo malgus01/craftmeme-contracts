@@ -421,4 +421,10 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Admin Functions //
     ////////////////////
+
+    function updateCreationFee(uint256 _newFee) external onlyOwner {
+        uint256 oldFee = creationFee;
+        creationFee = _newFee;
+        emit CreationFeeUpdated(oldFee, _newFee);
+    }
 }
