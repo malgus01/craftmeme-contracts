@@ -407,4 +407,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         LiquidityInfo storage info = tokenLiquidity[_tokenAddress];
         return (info.totalLiquidity, info.thresholdMet, info.contributors.length);
     }
+
+    function getUserContribution(address _tokenAddress, address _user) external view returns (uint256) {
+        return tokenLiquidity[_tokenAddress].contributions[_user];
+    }
 }
