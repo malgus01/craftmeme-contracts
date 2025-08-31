@@ -391,4 +391,13 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     function getTotalTransactions() external view returns (uint256) {
         return transactions.length;
     }
+
+    function getLiquidityInfo(address _tokenAddress) 
+        external 
+        view 
+        returns (uint256 totalLiquidity, bool thresholdMet, uint256 contributorCount) 
+    {
+        LiquidityInfo storage info = tokenLiquidity[_tokenAddress];
+        return (info.totalLiquidity, info.thresholdMet, info.contributors.length);
+    }
 }
