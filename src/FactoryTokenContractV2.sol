@@ -408,6 +408,12 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         return (info.totalLiquidity, info.thresholdMet, info.contributors.length);
     }
 
+    /**
+     * @notice Get user's contribution to a token's liquidity
+     * @param _tokenAddress Token address
+     * @param _user User address
+     * @return User's contribution amount
+     */
     function getUserContribution(address _tokenAddress, address _user) external view returns (uint256) {
         return tokenLiquidity[_tokenAddress].contributions[_user];
     }
