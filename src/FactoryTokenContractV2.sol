@@ -417,4 +417,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     function getUserContribution(address _tokenAddress, address _user) external view returns (uint256) {
         return tokenLiquidity[_tokenAddress].contributions[_user];
     }
+
+    ////////////////////
+    // Admin Functions //
+    ////////////////////
 }
