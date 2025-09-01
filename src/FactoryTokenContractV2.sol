@@ -431,4 +431,17 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         creationFee = _newFee;
         emit CreationFeeUpdated(oldFee, _newFee);
     }
+
+    /**
+     * @notice Update fee recipient
+     * @param _newRecipient New fee recipient address
+     */
+    function updateFeeRecipient(address _newRecipient) external onlyOwner {
+        if (_newRecipient == address(0)) {
+            revert FactoryTokenContract__InvalidAddress();
+        }
+        address oldRecipient = feeRecipient;
+        feeRecipient = _newRecipient;
+        emit FeeRecipientUpdated(oldRecipient, _newRecipient);
+    }
 }
