@@ -445,6 +445,10 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         emit FeeRecipientUpdated(oldRecipient, _newRecipient);
     }
 
+    /**
+     * @notice Update liquidity manager
+     * @param _newManager New liquidity manager address
+     */
     function updateLiquidityManager(address _newManager) external onlyOwner {
         if (_newManager == address(0)) {
             revert FactoryTokenContract__InvalidAddress();
