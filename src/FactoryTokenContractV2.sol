@@ -457,4 +457,17 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         liquidityManager = LiquidityManager(_newManager);
         emit ContractUpgraded("LiquidityManager", oldManager, _newManager);
     }
+
+    /**
+     * @notice Update vesting contract
+     * @param _newVesting New vesting contract address
+     */
+    function updateVestingContract(address _newVesting) external onlyOwner {
+        if (_newVesting == address(0)) {
+            revert FactoryTokenContract__InvalidAddress();
+        }
+        address oldVesting = address(vestingContract);
+        vestingContract = VestingContract(_newVesting);
+        emit ContractUpgraded("VestingContract", oldVesting, _newVesting);
+    }
 }
