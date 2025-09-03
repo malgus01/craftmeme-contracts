@@ -470,4 +470,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         vestingContract = VestingContract(_newVesting);
         emit ContractUpgraded("VestingContract", oldVesting, _newVesting);
     }
+
+    function pause() external onlyOwner {
+        _pause();
+    }
 }
