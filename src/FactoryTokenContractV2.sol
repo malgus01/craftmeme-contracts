@@ -477,4 +477,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     function pause() external onlyOwner {
         _pause();
     }
+
+    ////////////////////
+    // Internal Functions //
+    ////////////////////
 }
