@@ -482,6 +482,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     // Internal Functions //
     ////////////////////
 
+    /**
+     * @notice Validate token creation parameters
+     */
     function _validateTokenParameters(
         address[] memory _signers,
         string memory _tokenName,
