@@ -481,4 +481,54 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Internal Functions //
     ////////////////////
+
+    function _validateTokenParameters(
+        address[] memory _signers,
+        string memory _tokenName,
+        string memory _tokenSymbol,
+        uint256 _totalSupply,
+        uint256 _maxSupply,
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
+    ) internal pure {
+        // Validate signers
+        if (_signers.length < MIN_SIGNERS || _signers.length > MAX_SIGNERS) {
+            revert FactoryTokenContract__InvalidSignerCount();
+        }
+
+        // Check for duplicate signers
+        for (uint256 i = 0; i < _signers.length; i++) {
+            if (_signers[i] == address(0)) {
+                revert FactoryTokenContract__InvalidAddress();
+            }
+            for (uint256 j = i + 1; j < _signers.length; j++) {
+                if (_signers[i] == _signers[j]) {
+                    revert FactoryTokenContract__DuplicateSigner();
+                }
+            }
+        }
+
+        // Validate token parameters
+        if (bytes(_tokenName).length == 0) {
+            revert FactoryTokenContract__EmptyName();
+        }
+        if (bytes(_tokenName).length > MAX_NAME_LENGTH) {
+            revert FactoryTokenContract__NameTooLong();
+        }
+        if (bytes(_tokenSymbol).length == 0) {
+            revert FactoryTokenContract__EmptySymbol();
+        }
+        if (bytes(_tokenSymbol).length > MAX_SYMBOL_LENGTH) {
+            revert FactoryTokenContract__SymbolTooLong();
+        }
+        if (_totalSupply == 0 || _totalSupply > MAX_TOTAL_SUPPLY) {
+            revert FactoryTokenContract__InvalidSupply();
+        }
+        if (_supplyCapEnabled && _maxSupply < _totalSupply) {
+            revert FactoryTokenContract__InvalidSupply();
+        }
+        if (bytes(_ipfsHash).length == 0) {
+            revert FactoryTokenContract__InvalidIPFSHash();
+        }
+    }
 }
