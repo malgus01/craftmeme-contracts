@@ -534,4 +534,45 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
             revert FactoryTokenContract__InvalidIPFSHash();
         }
     }
+
+    /**
+     * @notice Create a new transaction
+     */
+    function _createTransaction(
+        address[] memory _signers,
+        address _owner,
+        string memory _tokenName,
+        string memory _tokenSymbol,
+        uint256 _totalSupply,
+        uint256 _maxSupply,
+        bool _canMint,
+        bool _canBurn,
+        bool _supplyCapEnabled,
+        string memory _ipfsHash
+    ) internal returns (uint256 txId) {
+        txId = nextTxId;
+        
+        transactions.push(TransactionData({
+            txId: txId,
+            owner: _owner,
+            signers: _signers,
+            isPending: true,
+            isExecuted: false,
+            tokenName: _tokenName,
+            tokenSymbol: _tokenSymbol,
+            totalSupply: _totalSupply,
+            maxSupply: _maxSupply,
+            canMint: _canMint,
+            canBurn: _canBurn,
+            supplyCapEnabled: _supplyCapEnabled,
+            tokenAddress: address(0),
+            ipfsHash: _ipfsHash,
+            createdAt: block.timestamp,
+            executedAt: 0,
+            liquidityProvided: 0
+        }));
+        
+        ownerToTxIds[_owner].push(txId);
+        nextTxId++;
+    }
 }
