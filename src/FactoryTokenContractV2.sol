@@ -535,6 +535,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         }
     }
 
+    /**
+     * @notice Create a new transaction
+     */
     function _createTransaction(
         address[] memory _signers,
         address _owner,
