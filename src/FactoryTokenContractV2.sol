@@ -575,4 +575,17 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         ownerToTxIds[_owner].push(txId);
         nextTxId++;
     }
+
+    function _deployToken(TransactionData memory _txData) internal returns (TokenContract) {
+        return new TokenContract(
+            _txData.owner,
+            _txData.tokenName,
+            _txData.tokenSymbol,
+            _txData.totalSupply,
+            _txData.maxSupply,
+            _txData.canMint,
+            _txData.canBurn,
+            _txData.supplyCapEnabled
+        );
+    }
 }
