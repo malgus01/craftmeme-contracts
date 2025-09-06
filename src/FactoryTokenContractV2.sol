@@ -576,6 +576,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         nextTxId++;
     }
 
+    /**
+     * @notice Deploy a new token contract
+     */
     function _deployToken(TransactionData memory _txData) internal returns (TokenContract) {
         return new TokenContract(
             _txData.owner,
