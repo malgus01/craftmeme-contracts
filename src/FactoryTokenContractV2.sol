@@ -592,6 +592,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         );
     }
 
+    /**
+     * @notice Initialize liquidity pool for a token
+     */
     function _initializeLiquidityPool(address _tokenAddress) internal {
         liquidityManager.initializePool(
             _tokenAddress,
