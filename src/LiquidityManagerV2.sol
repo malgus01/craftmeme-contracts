@@ -12,4 +12,4 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
 import { Pausable } from "@openzeppelin/contracts/utils/Pausable.sol";
 import { VestingContract } from "./VestingContract.sol";
 
-contract LiquidityManagerV2 {}
+contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {}
