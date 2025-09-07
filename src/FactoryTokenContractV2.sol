@@ -591,4 +591,14 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
             _txData.supplyCapEnabled
         );
     }
+
+    function _initializeLiquidityPool(address _tokenAddress) internal {
+        liquidityManager.initializePool(
+            _tokenAddress,
+            address(USDC),
+            3000, // 0.3% fee tier
+            60,   // tick spacing
+            79228162514264337593543950336 // sqrt price (1:1 ratio)
+        );
+    }
 }
