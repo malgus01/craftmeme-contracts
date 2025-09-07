@@ -12,4 +12,10 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
 import { Pausable } from "@openzeppelin/contracts/utils/Pausable.sol";
 import { VestingContract } from "./VestingContract.sol";
 
+/**
+ * @title LiquidityManager V2
+ * @author CraftMeme
+ * @notice Enhanced liquidity management contract for Uniswap V4 with comprehensive features
+ * @dev Manages liquidity addition, pool initialization, vesting, and anti-rug mechanisms
+ */
 contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {}
