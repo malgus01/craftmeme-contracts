@@ -18,4 +18,8 @@ import { VestingContract } from "./VestingContract.sol";
  * @notice Enhanced liquidity management contract for Uniswap V4 with comprehensive features
  * @dev Manages liquidity addition, pool initialization, vesting, and anti-rug mechanisms
  */
-contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {}
+contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
+    ////////////////////
+    // Libraries //
+    //////////////////
+}
