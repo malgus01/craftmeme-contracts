@@ -25,4 +25,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
     using CurrencyLibrary for Currency;
 
+    ////////////////////
+    // Custom Errors //
+    //////////////////
 }
