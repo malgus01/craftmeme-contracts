@@ -28,4 +28,6 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Custom Errors //
     //////////////////
+    error LiquidityManager__PoolAlreadyInitialized();
+
 }
