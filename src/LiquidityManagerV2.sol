@@ -30,5 +30,6 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     //////////////////
     error LiquidityManager__PoolAlreadyInitialized();
     error LiquidityManager__PoolNotInitialized();
+    error LiquidityManager__InvalidTokenAddress();
 
 }
