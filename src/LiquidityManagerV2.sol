@@ -38,6 +38,12 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     
     /// @notice Uniswap V4 pool manager
     IPoolManager public immutable poolManager;
+
+        /// @notice Vesting contract for liquidity providers
+    VestingContract public vestingContract;
+
+    /// @notice Factory contract address (authorized to initialize pools)
+    address public factoryContract;
     
     ////////////////////
     // Constructor //
