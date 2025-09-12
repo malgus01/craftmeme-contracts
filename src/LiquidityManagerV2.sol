@@ -32,7 +32,14 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     error LiquidityManager__PoolNotInitialized();
     error LiquidityManager__InvalidTokenAddress();
 
-        ////////////////////
+    ////////////////////
+    // State Variables //
+    ////////////////////
+    
+    /// @notice Uniswap V4 pool manager
+    IPoolManager public immutable poolManager;
+    
+    ////////////////////
     // Constructor //
     ////////////////////
     
