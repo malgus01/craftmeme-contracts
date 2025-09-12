@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.26;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -91,6 +91,12 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
 
     /// @notice All transactions
     TransactionData[] public transactions;
+
+    /// @notice Declare Addresses of other contracts
+    MultiSigContract public multiSigContract;
+    LiquidityManager public liquidityManager;
+    VestingContract public vestingContract;
+    IERC20 public USDC;
 
     /// @notice Mappings for efficient lookups
     mapping(address => uint256[]) public ownerToTxIds;
