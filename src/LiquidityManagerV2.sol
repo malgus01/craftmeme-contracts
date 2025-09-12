@@ -44,7 +44,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
     /// @notice Factory contract address (authorized to initialize pools)
     address public factoryContract;
-    
+
+    /// @notice Protocol fee recipient
+    address public protocolFeeRecipient;
+
     ////////////////////
     // Constructor //
     ////////////////////
