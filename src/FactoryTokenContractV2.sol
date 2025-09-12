@@ -92,6 +92,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice All transactions
     TransactionData[] public transactions;
 
+    /// @notice Tracks the next transaction ID
+    uint256 public nextTxId = 1;
+
     /// @notice Tracks the total number of tokens created
     uint256 public totalTokensCreated;
     
