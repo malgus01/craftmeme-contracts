@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.24;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -39,7 +39,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // State Variables //
     ///////////////////
-    
+
     /// @notice Maximum values for validation
     uint256 public constant MAX_SIGNERS = 10;
     uint256 public constant MIN_SIGNERS = 2;
@@ -97,7 +97,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
 
     /// @notice Tracks the total number of tokens created
     uint256 public totalTokensCreated;
-    
+
     /// @notice Declare Addresses of other contracts
     MultiSigContract public multiSigContract;
     LiquidityManager public liquidityManager;
@@ -131,18 +131,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 timestamp
     );
 
-    event LiquidityProvided(
-        address indexed token,
-        address indexed provider,
-        uint256 amount,
-        uint256 timestamp
-    );
+    event LiquidityProvided(address indexed token, address indexed provider, uint256 amount, uint256 timestamp);
 
-    event LiquidityThresholdMet(
-        address indexed token,
-        uint256 totalLiquidity,
-        uint256 timestamp
-    );
+    event LiquidityThresholdMet(address indexed token, uint256 totalLiquidity, uint256 timestamp);
 
     event CreationFeeUpdated(uint256 oldFee, uint256 newFee);
     event FeeRecipientUpdated(address oldRecipient, address newRecipient);
@@ -191,12 +182,13 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         address _usdc,
         address _feeRecipient,
         address _initialOwner
-    ) Ownable(_initialOwner) {
-        if (_multiSigContract == address(0) || 
-            _liquidityManager == address(0) || 
-            _vestingContract == address(0) ||
-            _usdc == address(0) || 
-            _feeRecipient == address(0)) {
+    )
+        Ownable(_initialOwner)
+    {
+        if (
+            _multiSigContract == address(0) || _liquidityManager == address(0) || _vestingContract == address(0)
+                || _usdc == address(0) || _feeRecipient == address(0)
+        ) {
             revert FactoryTokenContract__InvalidAddress();
         }
 
@@ -207,25 +199,27 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         feeRecipient = _feeRecipient;
 
         // Initialize with dummy transaction at index 0 for easier indexing
-        transactions.push(TransactionData({
-            txId: 0,
-            owner: address(0),
-            signers: new address[](0),
-            isPending: false,
-            isExecuted: false,
-            tokenName: "",
-            tokenSymbol: "",
-            totalSupply: 0,
-            maxSupply: 0,
-            canMint: false,
-            canBurn: false,
-            supplyCapEnabled: false,
-            tokenAddress: address(0),
-            ipfsHash: "",
-            createdAt: block.timestamp,
-            executedAt: 0,
-            liquidityProvided: 0
-        }));
+        transactions.push(
+            TransactionData({
+                txId: 0,
+                owner: address(0),
+                signers: new address[](0),
+                isPending: false,
+                isExecuted: false,
+                tokenName: "",
+                tokenSymbol: "",
+                totalSupply: 0,
+                maxSupply: 0,
+                canMint: false,
+                canBurn: false,
+                supplyCapEnabled: false,
+                tokenAddress: address(0),
+                ipfsHash: "",
+                createdAt: block.timestamp,
+                executedAt: 0,
+                liquidityProvided: 0
+            })
+        );
     }
 
     ////////////////////
@@ -271,7 +265,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         }
 
         // Validate input parameters
-        _validateTokenParameters(_signers, _tokenName, _tokenSymbol, _totalSupply, _maxSupply, _supplyCapEnabled, _ipfsHash);
+        _validateTokenParameters(
+            _signers, _tokenName, _tokenSymbol, _totalSupply, _maxSupply, _supplyCapEnabled, _ipfsHash
+        );
 
         // Create transaction
         txId = _createTransaction(
@@ -292,7 +288,7 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
 
         // Transfer fee
         if (msg.value > 0) {
-            (bool success, ) = feeRecipient.call{value: msg.value}("");
+            (bool success,) = feeRecipient.call{ value: msg.value }("");
             require(success, "Fee transfer failed");
         }
 
@@ -303,38 +299,28 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
      * @notice Executes a pending transaction after multisig approval
      * @param _txId ID of the transaction to execute
      */
-    function executeCreateMemecoin(uint256 _txId) 
-        external 
-        onlyMultiSigContract 
-        onlyPendingTx(_txId) 
-        nonReentrant 
-    {
+    function executeCreateMemecoin(uint256 _txId) external onlyMultiSigContract onlyPendingTx(_txId) nonReentrant {
         TransactionData storage txData = transactions[_txId];
-        
+
         // Create the token
         TokenContract newToken = _deployToken(txData);
-        
+
         // Update transaction status
         txData.isPending = false;
         txData.isExecuted = true;
         txData.tokenAddress = address(newToken);
         txData.executedAt = block.timestamp;
-        
+
         // Update tracking
         isTokenCreated[address(newToken)] = true;
         tokenToOwner[address(newToken)] = txData.owner;
         totalTokensCreated++;
-        
+
         // Initialize liquidity pool
         _initializeLiquidityPool(address(newToken));
-        
+
         emit MemecoinCreated(
-            txData.owner, 
-            address(newToken), 
-            txData.tokenName, 
-            txData.tokenSymbol, 
-            txData.totalSupply,
-            block.timestamp
+            txData.owner, address(newToken), txData.tokenName, txData.tokenSymbol, txData.totalSupply, block.timestamp
         );
     }
 
@@ -343,34 +329,30 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
      * @param _tokenAddress Address of the token
      * @param _usdcAmount Amount of USDC to provide
      */
-    function provideLiquidity(address _tokenAddress, uint256 _usdcAmount) 
-        external 
-        nonReentrant 
-        whenNotPaused 
-    {
+    function provideLiquidity(address _tokenAddress, uint256 _usdcAmount) external nonReentrant whenNotPaused {
         if (!isTokenCreated[_tokenAddress]) {
             revert FactoryTokenContract__InvalidAddress();
         }
 
         // Transfer USDC from user
         USDC.transferFrom(msg.sender, address(this), _usdcAmount);
-        
+
         // Update liquidity tracking
         LiquidityInfo storage liquidityInfo = tokenLiquidity[_tokenAddress];
-        
+
         if (liquidityInfo.contributions[msg.sender] == 0) {
             liquidityInfo.contributors.push(msg.sender);
         }
-        
+
         liquidityInfo.contributions[msg.sender] += _usdcAmount;
         liquidityInfo.totalLiquidity += _usdcAmount;
-        
+
         // Check if threshold is met
         if (!liquidityInfo.thresholdMet && liquidityInfo.totalLiquidity >= MIN_LIQUIDITY_THRESHOLD) {
             liquidityInfo.thresholdMet = true;
             emit LiquidityThresholdMet(_tokenAddress, liquidityInfo.totalLiquidity, block.timestamp);
         }
-        
+
         emit LiquidityProvided(_tokenAddress, msg.sender, _usdcAmount, block.timestamp);
     }
 
@@ -411,10 +393,10 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
      * @return thresholdMet Whether threshold is met
      * @return contributorCount Number of contributors
      */
-    function getLiquidityInfo(address _tokenAddress) 
-        external 
-        view 
-        returns (uint256 totalLiquidity, bool thresholdMet, uint256 contributorCount) 
+    function getLiquidityInfo(address _tokenAddress)
+        external
+        view
+        returns (uint256 totalLiquidity, bool thresholdMet, uint256 contributorCount)
     {
         LiquidityInfo storage info = tokenLiquidity[_tokenAddress];
         return (info.totalLiquidity, info.thresholdMet, info.contributors.length);
@@ -505,7 +487,10 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 _maxSupply,
         bool _supplyCapEnabled,
         string memory _ipfsHash
-    ) internal pure {
+    )
+        internal
+        pure
+    {
         // Validate signers
         if (_signers.length < MIN_SIGNERS || _signers.length > MAX_SIGNERS) {
             revert FactoryTokenContract__InvalidSignerCount();
@@ -561,29 +546,34 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
         bool _canBurn,
         bool _supplyCapEnabled,
         string memory _ipfsHash
-    ) internal returns (uint256 txId) {
+    )
+        internal
+        returns (uint256 txId)
+    {
         txId = nextTxId;
-        
-        transactions.push(TransactionData({
-            txId: txId,
-            owner: _owner,
-            signers: _signers,
-            isPending: true,
-            isExecuted: false,
-            tokenName: _tokenName,
-            tokenSymbol: _tokenSymbol,
-            totalSupply: _totalSupply,
-            maxSupply: _maxSupply,
-            canMint: _canMint,
-            canBurn: _canBurn,
-            supplyCapEnabled: _supplyCapEnabled,
-            tokenAddress: address(0),
-            ipfsHash: _ipfsHash,
-            createdAt: block.timestamp,
-            executedAt: 0,
-            liquidityProvided: 0
-        }));
-        
+
+        transactions.push(
+            TransactionData({
+                txId: txId,
+                owner: _owner,
+                signers: _signers,
+                isPending: true,
+                isExecuted: false,
+                tokenName: _tokenName,
+                tokenSymbol: _tokenSymbol,
+                totalSupply: _totalSupply,
+                maxSupply: _maxSupply,
+                canMint: _canMint,
+                canBurn: _canBurn,
+                supplyCapEnabled: _supplyCapEnabled,
+                tokenAddress: address(0),
+                ipfsHash: _ipfsHash,
+                createdAt: block.timestamp,
+                executedAt: 0,
+                liquidityProvided: 0
+            })
+        );
+
         ownerToTxIds[_owner].push(txId);
         nextTxId++;
     }
@@ -612,8 +602,8 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
             _tokenAddress,
             address(USDC),
             3000, // 0.3% fee tier
-            60,   // tick spacing
-            79228162514264337593543950336 // sqrt price (1:1 ratio)
+            60, // tick spacing
+            79_228_162_514_264_337_593_543_950_336 // sqrt price (1:1 ratio)
         );
     }
 }
