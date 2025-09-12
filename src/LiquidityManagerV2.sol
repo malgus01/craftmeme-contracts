@@ -32,4 +32,28 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     error LiquidityManager__PoolNotInitialized();
     error LiquidityManager__InvalidTokenAddress();
 
+        ////////////////////
+    // Constructor //
+    ////////////////////
+    
+    constructor(
+        address _poolManager,
+        address _vestingContract,
+        address _factoryContract,
+        address _protocolFeeRecipient,
+        address _initialOwner
+    ) Ownable(_initialOwner) {
+        if (_poolManager == address(0) || 
+            _vestingContract == address(0) || 
+            _factoryContract == address(0) || 
+            _protocolFeeRecipient == address(0)) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+
+        poolManager = IPoolManager(_poolManager);
+        vestingContract = VestingContract(_vestingContract);
+        factoryContract = _factoryContract;
+        protocolFeeRecipient = _protocolFeeRecipient;
+    }
+
 }
