@@ -92,6 +92,9 @@ contract FactoryTokenContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice All transactions
     TransactionData[] public transactions;
 
+    /// @notice Tracks the total number of tokens created
+    uint256 public totalTokensCreated;
+    
     /// @notice Declare Addresses of other contracts
     MultiSigContract public multiSigContract;
     LiquidityManager public liquidityManager;
