@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import { IPoolManager } from "v4-core/src/interfaces/IPoolManager.sol";
 import { IHooks } from "v4-core/src/interfaces/IHooks.sol";
@@ -32,4 +32,45 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     error LiquidityManager__PoolNotInitialized();
     error LiquidityManager__InvalidTokenAddress();
 
+    ////////////////////
+    // State Variables //
+    ////////////////////
+
+    /// @notice Uniswap V4 pool manager
+    IPoolManager public immutable poolManager;
+
+    /// @notice Vesting contract for liquidity providers
+    VestingContract public vestingContract;
+
+    /// @notice Factory contract address (authorized to initialize pools)
+    address public factoryContract;
+
+    /// @notice Protocol fee recipient
+    address public protocolFeeRecipient;
+
+    ////////////////////
+    // Constructor //
+    ////////////////////
+
+    constructor(
+        address _poolManager,
+        address _vestingContract,
+        address _factoryContract,
+        address _protocolFeeRecipient,
+        address _initialOwner
+    )
+        Ownable(_initialOwner)
+    {
+        if (
+            _poolManager == address(0) || _vestingContract == address(0) || _factoryContract == address(0)
+                || _protocolFeeRecipient == address(0)
+        ) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+
+        poolManager = IPoolManager(_poolManager);
+        vestingContract = VestingContract(_vestingContract);
+        factoryContract = _factoryContract;
+        protocolFeeRecipient = _protocolFeeRecipient;
+    }
 }

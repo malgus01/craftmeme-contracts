@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -80,7 +80,9 @@ contract VestingContract is Ownable {
         external
         onlyOwner
     {
-        require(vestingSchedules[beneficiary].amount == 0, VestingAlreadySet());
+        if (vestingSchedules[beneficiary].amount != 0) {
+            revert VestingAlreadySet();
+        }
 
         vestingSchedules[beneficiary] = VestingSchedule({
             tokenAddress: tokenAddress,
@@ -99,11 +101,17 @@ contract VestingContract is Ownable {
      */
     function release(address beneficiary) public {
         VestingSchedule storage schedule = vestingSchedules[beneficiary];
-        require(schedule.amount > 0, NoVestingSchedule());
-        require(!schedule.revoked, VestingIsRevoked());
+        if (schedule.amount == 0) {
+            revert NoVestingSchedule();
+        }
+        if (schedule.revoked) {
+            revert VestingIsRevoked();
+        }
 
         uint256 unreleased = vestedAmount(beneficiary) - schedule.released;
-        require(unreleased > 0, NoTokensAreDue());
+        if (unreleased == 0) {
+            revert NoTokensAreDue();
+        }
 
         schedule.released += unreleased;
         IERC20(schedule.tokenAddress).safeTransfer(beneficiary, unreleased);
@@ -118,7 +126,9 @@ contract VestingContract is Ownable {
      */
     function revoke(address beneficiary) external onlyOwner {
         VestingSchedule storage schedule = vestingSchedules[beneficiary];
-        require(!schedule.revoked, AlreadyRevoked());
+        if (schedule.revoked) {
+            revert AlreadyRevoked();
+        }
 
         schedule.revoked = true;
         emit VestingRevoked(beneficiary);

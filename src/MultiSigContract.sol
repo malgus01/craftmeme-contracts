@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { FactoryTokenContract } from "./FactoryTokenContract.sol";
@@ -52,10 +52,9 @@ contract MultiSigContract is Ownable {
      * @dev Modifier that ensures only the factory token contract or owner can call the function.
      */
     modifier onlyFactoryTokenContract() {
-        require(
-            (msg.sender == address(factoryTokenContract)) || (msg.sender == owner()),
-            MultiSigContract__onlyFactoryTokenContract()
-        );
+        if (!((msg.sender == address(factoryTokenContract)) || (msg.sender == owner()))) {
+            revert MultiSigContract__onlyFactoryTokenContract();
+        }
         _;
     }
 
@@ -70,7 +69,9 @@ contract MultiSigContract is Ownable {
                 temp = pendingTxs[_txId].signers[i];
             }
         }
-        require(temp == msg.sender, MultiSigContract__onlySigner());
+        if (temp != msg.sender) {
+            revert MultiSigContract__onlySigner();
+        }
         _;
     }
 
@@ -85,7 +86,9 @@ contract MultiSigContract is Ownable {
                 temp = pendingTxs[_txId].signatures[i];
             }
         }
-        require(temp == address(0), MultiSigContract__alreadySigned());
+        if (temp != address(0)) {
+            revert MultiSigContract__alreadySigned();
+        }
         _;
     }
 
@@ -97,10 +100,14 @@ contract MultiSigContract is Ownable {
         address temp = address(0);
         for (uint256 i = 0; i < pendingTxs[_txId].signatures.length; i++) {
             if (pendingTxs[_txId].signatures[i] == msg.sender) {
-                temp = pendingTxs[_txId].signatures[i];
+                if (temp != msg.sender) {
+                    revert MultiSigContract__alreadySigned();
+                }
             }
         }
-        require(temp == msg.sender, MultiSigContract__alreadySigned());
+        if (temp != msg.sender) {
+            revert MultiSigContract__alreadySigned();
+        }
         _;
     }
 

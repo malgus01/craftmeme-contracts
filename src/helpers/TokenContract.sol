@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
@@ -100,9 +100,9 @@ contract TokenContract is ERC20, ERC20Pausable, Ownable {
      * @param amount The amount of tokens to mint.
      */
     function mint(address to, uint256 amount) external onlyOwner {
-        require(canMint, MintingIsDisabled());
+        if (!canMint) revert MintingIsDisabled();
         if (supplyCapEnabled) {
-            require(totalSupply() + amount <= maxSupply, MaxSupplyReached());
+            if (totalSupply() + amount > maxSupply) revert MaxSupplyReached();
         }
         _mint(to, amount);
         emit Mint(to, amount);
@@ -119,7 +119,7 @@ contract TokenContract is ERC20, ERC20Pausable, Ownable {
      * @param amount The amount of tokens to burn.
      */
     function burn(uint256 amount) external {
-        require(canBurn, BurningIsDisabled());
+        if (!canBurn) revert BurningIsDisabled();
         _burn(msg.sender, amount);
         emit Burn(msg.sender, amount);
     }

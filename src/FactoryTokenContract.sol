@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { TokenContract } from "./helpers/TokenContract.sol";
@@ -74,13 +74,17 @@ contract FactoryTokenContract is Ownable {
      * @notice Modifiers.
      */
     modifier onlyMultiSigContract() {
-        require(msg.sender == address(multiSigContract), FactoryTokenContract__onlyMultiSigContract());
+        if (msg.sender != address(multiSigContract)) {
+            revert FactoryTokenContract__onlyMultiSigContract();
+        }
         _;
     }
 
     /// @notice modifier to ensure only pending txs can be executed
     modifier onlyPendigTx(uint256 _txId) {
-        require(txArray[_txId].isPending, TransactionAlreadyExecuted());
+        if (!txArray[_txId].isPending) {
+            revert TransactionAlreadyExecuted();
+        }
         _;
     }
 
@@ -144,12 +148,24 @@ contract FactoryTokenContract is Ownable {
         external
         returns (uint256 txId)
     {
-        require(_signers.length >= 2, InvalidSignerCount());
-        require(bytes(_tokenName).length > 0, EmptyName());
-        require(bytes(_tokenSymbol).length > 0, EmptySymbol());
-        require(_totalSupply > 0, InvalidSupply());
-        if (_supplyCapEnabled) {
-            require(_maxSupply >= _totalSupply, InvalidSupply());
+        if (_signers.length < 2) {
+            revert InvalidSignerCount();
+        }
+        if (bytes(_tokenName).length == 0) {
+            revert EmptyName();
+        }
+        if (bytes(_tokenSymbol).length == 0) {
+            revert EmptySymbol();
+        }
+        if (_totalSupply <= 0) {
+            if (_supplyCapEnabled) {
+                if (_maxSupply < _totalSupply) {
+                    revert InvalidSupply();
+                }
+            }
+            if (_maxSupply < _totalSupply) {
+                revert InvalidSupply();
+            }
         }
         txId = _handleQueue(
             _signers,

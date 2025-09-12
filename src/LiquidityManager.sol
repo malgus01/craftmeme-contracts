@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import { IPoolManager } from "v4-core/src/interfaces/IPoolManager.sol";
 import { IHooks } from "v4-core/src/interfaces/IHooks.sol";
@@ -96,7 +96,9 @@ contract LiquidityManager {
     )
         external
     {
-        require(!poolInitialized[token0], PoolAlreadyInitialized());
+        if (poolInitialized[token0]) {
+            revert PoolAlreadyInitialized();
+        }
         if (token0 > token1) {
             (token0, token1) = (token1, token0);
         }
@@ -138,7 +140,7 @@ contract LiquidityManager {
     )
         external
     {
-        require(poolInitialized[token0], PoolNotInitialized());
+        if (!poolInitialized[token0]) revert PoolNotInitialized();
 
         IERC20(token0).safeTransferFrom(msg.sender, address(this), amountToken0);
         IERC20(token1).safeTransferFrom(msg.sender, address(this), amountToken1);

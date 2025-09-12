@@ -1,0 +1,17 @@
+{
+  "lib/forge-std": {
+    "rev": "8f24d6b04c92975e0795b5868aa0d783251cdeaa"
+  },
+  "lib/openzeppelin-contracts": {
+    "rev": "3291252c866ad698f6a55ec660259e49a67eb3d0"
+  },
+  "lib/sign-protocol-evm": {
+    "rev": "264af194a780b7b4493aa056b597ab80243b5a0c"
+  },
+  "lib/v4-core": {
+    "rev": "4aa6c3ddd3b540a3aa22021c02d2298e79ae3928"
+  },
+  "lib/v4-periphery": {
+    "rev": "0c162a0cec2bf9184ce97e19f710fbc657ae7a5a"
+  }
+}
