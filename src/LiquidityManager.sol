@@ -121,9 +121,6 @@ contract LiquidityManager {
      * @notice Adds liquidity to an initialized Uniswap V4 pool.
      * @param token0 Address of the first token in the pool.
      * @param token1 Address of the second token in the pool.
-     * @param swapFee The fee tier for the pool.
-     * @param tickLower Lower bound for liquidity range.
-     * @param tickUpper Upper bound for liquidity range.
      * @param amountToken0 Amount of `token0` to provide as liquidity.
      * @param amountToken1 Amount of `token1` to provide as liquidity.
      * @dev Once a user’s liquidity provision exceeds `liquidityThreshold`, a vesting schedule is set up for the
@@ -132,9 +129,9 @@ contract LiquidityManager {
     function addLiquidity(
         address token0,
         address token1,
-        uint24 swapFee,
-        int24 tickLower,
-        int24 tickUpper,
+        uint24 ,
+        int24 ,
+        int24 ,
         uint256 amountToken0,
         uint256 amountToken1
     )
