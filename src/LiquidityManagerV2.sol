@@ -87,6 +87,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Default liquidity threshold (20 USDC)
     uint256 public defaultLiquidityThreshold = 20 * 1e6;
     
+        /// @notice Default vesting duration (8 months)
+    uint256 public defaultVestingDuration = 8 * 30 days;
+    
+
     ////////////////////
     // Constructor //
     ////////////////////
