@@ -51,19 +51,19 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     uint256 public constant MAX_LIQUIDITY_THRESHOLD = 1000 * 1e6; // 1000 USDC max
 
     /// @notice Minimum liquidity threshold to prevent dust attacks
-    uint256 public constant MIN_LIQUIDITY_THRESHOLD = 10 * 1e6;   // 10 USDC min
+    uint256 public constant MIN_LIQUIDITY_THRESHOLD = 10 * 1e6; // 10 USDC min
 
     /// @notice Vesting duration limits
-    uint256 public constant MAX_VESTING_DURATION = 365 days;       // 1 year max
+    uint256 public constant MAX_VESTING_DURATION = 365 days; // 1 year max
 
     /// @notice Minimum vesting duration to ensure commitment
-    uint256 public constant MIN_VESTING_DURATION = 30 days;        // 1 month min
+    uint256 public constant MIN_VESTING_DURATION = 30 days; // 1 month min
 
     /// @notice Slippage and fee precision constants
-    uint256 public constant SLIPPAGE_PRECISION = 10000;           // 100% = 10000
+    uint256 public constant SLIPPAGE_PRECISION = 10_000; // 100% = 10000
 
     /// @notice Fee precision constant for protocol fees
-    uint256 public constant FEE_PRECISION = 1000000;  
+    uint256 public constant FEE_PRECISION = 1_000_000;
 
     ////////////////////
     // State Variables //
