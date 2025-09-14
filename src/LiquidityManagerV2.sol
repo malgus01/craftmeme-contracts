@@ -35,6 +35,35 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     error LiquidityManager__InsufficientLiquidity();
     error LiquidityManager__ThresholdAlreadyMet();
     error LiquidityManager__VestingAlreadySet();
+    error LiquidityManager__InvalidTickRange();
+    error LiquidityManager__InvalidSwapFee();
+    error LiquidityManager__UnauthorizedCaller();
+    error LiquidityManager__TokenNotSupported();
+    error LiquidityManager__LiquidityLocked();
+    error LiquidityManager__InvalidSlippage();
+    error LiquidityManager__DeadlineExpired();
+
+    ////////////////////
+    // Constants //
+    //////////////////
+
+    /// @notice Supported tokens
+    uint256 public constant MAX_LIQUIDITY_THRESHOLD = 1000 * 1e6; // 1000 USDC max
+
+    /// @notice Minimum liquidity threshold to prevent dust attacks
+    uint256 public constant MIN_LIQUIDITY_THRESHOLD = 10 * 1e6;   // 10 USDC min
+
+    /// @notice Vesting duration limits
+    uint256 public constant MAX_VESTING_DURATION = 365 days;       // 1 year max
+
+    /// @notice Minimum vesting duration to ensure commitment
+    uint256 public constant MIN_VESTING_DURATION = 30 days;        // 1 month min
+
+    /// @notice Slippage and fee precision constants
+    uint256 public constant SLIPPAGE_PRECISION = 10000;           // 100% = 10000
+
+    /// @notice Fee precision constant for protocol fees
+    uint256 public constant FEE_PRECISION = 1000000;  
 
     ////////////////////
     // State Variables //
