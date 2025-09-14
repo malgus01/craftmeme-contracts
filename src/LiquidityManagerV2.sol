@@ -122,6 +122,22 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         address[] providersList;
     }
 
+    /**
+     * @notice Liquidity position structure
+     */
+    struct LiquidityPosition {
+        address token0;
+        address token1;
+        uint24 fee;
+        int24 tickLower;
+        int24 tickUpper;
+        uint256 liquidity;
+        uint256 token0Amount;
+        uint256 token1Amount;
+        uint256 timestamp;
+        bool active;
+    }
+    
     ////////////////////
     // Constructor //
     ////////////////////
