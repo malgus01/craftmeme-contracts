@@ -106,7 +106,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 emergencyWithdrawTime;
     }
 
-        /**
+    /**
      * @notice Pool information structure
      */
     struct PoolInfo {
@@ -137,7 +137,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 timestamp;
         bool active;
     }
-    
+
     ////////////////////
     // Constructor //
     ////////////////////
