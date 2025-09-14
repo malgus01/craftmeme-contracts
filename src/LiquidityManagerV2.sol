@@ -36,7 +36,11 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     error LiquidityManager__ThresholdAlreadyMet();
     error LiquidityManager__VestingAlreadySet();
     error LiquidityManager__InvalidTickRange();
-    
+    error LiquidityManager__InvalidSwapFee();
+    error LiquidityManager__UnauthorizedCaller();
+    error LiquidityManager__TokenNotSupported();
+    error LiquidityManager__LiquidityLocked();
+
     ////////////////////
     // State Variables //
     ////////////////////
