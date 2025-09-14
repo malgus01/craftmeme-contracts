@@ -81,6 +81,18 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Protocol fee recipient
     address public protocolFeeRecipient;
 
+    /// @notice Protocol fee (in basis points, e.g., 100 = 1%)
+    uint256 public protocolFee = 50; // 0.5%
+
+    /// @notice Default liquidity threshold (20 USDC)
+    uint256 public defaultLiquidityThreshold = 20 * 1e6;
+
+    /// @notice Default vesting duration (8 months)
+    uint256 public defaultVestingDuration = 8 * 30 days;
+
+    /// @notice Emergency withdrawal delay
+    uint256 public emergencyWithdrawDelay = 7 days;
+
     ////////////////////
     // Constructor //
     ////////////////////
