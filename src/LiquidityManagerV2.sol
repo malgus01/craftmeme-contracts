@@ -93,6 +93,51 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Emergency withdrawal delay
     uint256 public emergencyWithdrawDelay = 7 days;
 
+    /**
+     * @notice Enhanced liquidity provider structure
+     */
+    struct LiquidityProvider {
+        uint256 amountProvided;
+        uint256 lastContribution;
+        uint256 totalRewards;
+        bool hasVested;
+        bool isEligibleForRewards;
+        uint256 lockEndTime;
+        uint256 emergencyWithdrawTime;
+    }
+
+        /**
+     * @notice Pool information structure
+     */
+    struct PoolInfo {
+        bool initialized;
+        uint256 totalLiquidity;
+        uint256 liquidityThreshold;
+        uint256 vestingDuration;
+        uint256 createdAt;
+        address creator;
+        uint256 providersCount;
+        bool emergencyMode;
+        mapping(address => LiquidityProvider) providers;
+        address[] providersList;
+    }
+
+    /**
+     * @notice Liquidity position structure
+     */
+    struct LiquidityPosition {
+        address token0;
+        address token1;
+        uint24 fee;
+        int24 tickLower;
+        int24 tickUpper;
+        uint256 liquidity;
+        uint256 token0Amount;
+        uint256 token1Amount;
+        uint256 timestamp;
+        bool active;
+    }
+    
     ////////////////////
     // Constructor //
     ////////////////////
