@@ -275,4 +275,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         factoryContract = _factoryContract;
         protocolFeeRecipient = _protocolFeeRecipient;
     }
+
+    ////////////////////
+    // External Functions //
+    ////////////////////
 }
