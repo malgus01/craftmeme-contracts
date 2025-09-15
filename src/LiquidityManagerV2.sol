@@ -147,6 +147,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         /// @notice User positions
     mapping(address => LiquidityPosition[]) public userPositions;
     
+    /// @notice Supported tokens for liquidity provision
+    mapping(address => bool) public supportedTokens;
     ////////////////////
     // Constructor //
     ////////////////////
