@@ -218,7 +218,12 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 amount,
         address recipient
     );
-    
+
+        event LiquidityThresholdUpdated(
+        bytes32 indexed poolId,
+        uint256 oldThreshold,
+        uint256 newThreshold
+    );
     ////////////////////
     // Constructor //
     ////////////////////
