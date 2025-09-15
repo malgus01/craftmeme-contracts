@@ -160,6 +160,15 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Events //
     ////////////////////
+
+        event PoolInitialized(
+        address indexed token0,
+        address indexed token1,
+        bytes32 indexed poolId,
+        uint24 fee,
+        uint160 startingPrice,
+        uint256 timestamp
+    );
     
     ////////////////////
     // Constructor //
