@@ -198,6 +198,14 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 totalLiquidity,
         uint256 timestamp
     );
+
+    event VestingScheduleCreated(
+        address indexed beneficiary,
+        address indexed token,
+        uint256 amount,
+        uint256 duration,
+        uint256 timestamp
+    );
     
     ////////////////////
     // Constructor //
