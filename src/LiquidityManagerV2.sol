@@ -235,6 +235,13 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
+
+        modifier validAmount(uint256 amount) {
+        if (amount == 0) {
+            revert LiquidityManager__InvalidAmount();
+        }
+        _;
+    }
     ////////////////////
     // Constructor //
     ////////////////////
