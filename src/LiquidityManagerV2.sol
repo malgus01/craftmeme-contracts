@@ -242,6 +242,14 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
+
+        modifier deadlineCheck(uint256 deadline) {
+        if (block.timestamp > deadline) {
+            revert LiquidityManager__DeadlineExpired();
+        }
+        _;
+    }
+    
     ////////////////////
     // Constructor //
     ////////////////////
