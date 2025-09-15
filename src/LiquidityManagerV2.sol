@@ -224,6 +224,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 oldThreshold,
         uint256 newThreshold
     );
+
+        event SupportedTokenUpdated(address indexed token, bool supported);
+
     ////////////////////
     // Constructor //
     ////////////////////
