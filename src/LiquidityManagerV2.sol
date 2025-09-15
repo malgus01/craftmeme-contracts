@@ -141,6 +141,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Mappings //
     ////////////////////
+
     /// @notice Pool information by token pair
     mapping(bytes32 => PoolInfo) public poolInfo;
 
@@ -155,6 +156,60 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
     /// @notice Token pair to pool ID mapping
     mapping(address => mapping(address => bytes32)) public tokenPairToPoolId;
+
+    ////////////////////
+    // Events //
+    ////////////////////
+
+    event PoolInitialized(
+        address indexed token0,
+        address indexed token1,
+        bytes32 indexed poolId,
+        uint24 fee,
+        uint160 startingPrice,
+        uint256 timestamp
+    );
+
+    event LiquidityAdded(
+        address indexed provider,
+        address indexed token0,
+        address indexed token1,
+        bytes32 poolId,
+        uint256 amount0,
+        uint256 amount1,
+        uint256 liquidity,
+        uint256 timestamp
+    );
+
+    event LiquidityRemoved(
+        address indexed provider,
+        address indexed token0,
+        address indexed token1,
+        bytes32 poolId,
+        uint256 amount0,
+        uint256 amount1,
+        uint256 timestamp
+    );
+
+    event LiquidityThresholdReached(
+        address indexed token0,
+        address indexed token1,
+        bytes32 indexed poolId,
+        uint256 totalLiquidity,
+        uint256 timestamp
+    );
+
+    event VestingScheduleCreated(
+        address indexed beneficiary, address indexed token, uint256 amount, uint256 duration, uint256 timestamp
+    );
+
+    event EmergencyWithdrawInitiated(address indexed provider, bytes32 indexed poolId, uint256 withdrawTime);
+
+    event ProtocolFeeCollected(address indexed token, uint256 amount, address recipient);
+
+    event LiquidityThresholdUpdated(bytes32 indexed poolId, uint256 oldThreshold, uint256 newThreshold);
+
+    event SupportedTokenUpdated(address indexed token, bool supported);
 
     ////////////////////
     // Constructor //
