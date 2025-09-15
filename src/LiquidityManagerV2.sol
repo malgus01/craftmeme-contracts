@@ -228,7 +228,13 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
-    
+
+    modifier onlySupportedTokens(address token0, address token1) {
+        if (!supportedTokens[token0] || !supportedTokens[token1]) {
+            revert LiquidityManager__TokenNotSupported();
+        }
+        _;
+    }
     ////////////////////
     // Constructor //
     ////////////////////
