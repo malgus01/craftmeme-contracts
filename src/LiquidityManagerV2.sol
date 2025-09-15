@@ -139,6 +139,24 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     }
 
     ////////////////////
+    // Mappings //
+    ////////////////////
+    /// @notice Pool information by token pair
+    mapping(bytes32 => PoolInfo) public poolInfo;
+
+    /// @notice User positions
+    mapping(address => LiquidityPosition[]) public userPositions;
+
+    /// @notice Supported tokens for liquidity provision
+    mapping(address => bool) public supportedTokens;
+
+    /// @notice Pool keys for easy access
+    mapping(bytes32 => PoolKey) public poolKeys;
+
+    /// @notice Token pair to pool ID mapping
+    mapping(address => mapping(address => bytes32)) public tokenPairToPoolId;
+
+    ////////////////////
     // Constructor //
     ////////////////////
 
