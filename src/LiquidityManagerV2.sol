@@ -212,6 +212,45 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     event SupportedTokenUpdated(address indexed token, bool supported);
 
     ////////////////////
+    // Modifiers //
+    ////////////////////
+
+    modifier onlyFactory() {
+        if (msg.sender != factoryContract) {
+            revert LiquidityManager__UnauthorizedCaller();
+        }
+        _;
+    }
+
+    modifier validTokenPair(address token0, address token1) {
+        if (token0 == address(0) || token1 == address(0) || token0 == token1) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        _;
+    }
+
+    modifier onlySupportedTokens(address token0, address token1) {
+        if (!supportedTokens[token0] || !supportedTokens[token1]) {
+            revert LiquidityManager__TokenNotSupported();
+        }
+        _;
+    }
+
+    modifier validAmount(uint256 amount) {
+        if (amount == 0) {
+            revert LiquidityManager__InvalidAmount();
+        }
+        _;
+    }
+
+    modifier deadlineCheck(uint256 deadline) {
+        if (block.timestamp > deadline) {
+            revert LiquidityManager__DeadlineExpired();
+        }
+        _;
+    }
+
+    ////////////////////
     // Constructor //
     ////////////////////
 
