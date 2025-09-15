@@ -180,6 +180,16 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 liquidity,
         uint256 timestamp
     );
+
+        event LiquidityRemoved(
+        address indexed provider,
+        address indexed token0,
+        address indexed token1,
+        bytes32 poolId,
+        uint256 amount0,
+        uint256 amount1,
+        uint256 timestamp
+    );
     
     ////////////////////
     // Constructor //
