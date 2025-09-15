@@ -161,7 +161,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     // Events //
     ////////////////////
 
-        event PoolInitialized(
+    event PoolInitialized(
         address indexed token0,
         address indexed token1,
         bytes32 indexed poolId,
@@ -170,7 +170,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 timestamp
     );
 
-        event LiquidityAdded(
+    event LiquidityAdded(
         address indexed provider,
         address indexed token0,
         address indexed token1,
@@ -181,7 +181,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 timestamp
     );
 
-        event LiquidityRemoved(
+    event LiquidityRemoved(
         address indexed provider,
         address indexed token0,
         address indexed token1,
@@ -200,32 +200,16 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     );
 
     event VestingScheduleCreated(
-        address indexed beneficiary,
-        address indexed token,
-        uint256 amount,
-        uint256 duration,
-        uint256 timestamp
+        address indexed beneficiary, address indexed token, uint256 amount, uint256 duration, uint256 timestamp
     );
 
-        event EmergencyWithdrawInitiated(
-        address indexed provider,
-        bytes32 indexed poolId,
-        uint256 withdrawTime
-    );
+    event EmergencyWithdrawInitiated(address indexed provider, bytes32 indexed poolId, uint256 withdrawTime);
 
-        event ProtocolFeeCollected(
-        address indexed token,
-        uint256 amount,
-        address recipient
-    );
+    event ProtocolFeeCollected(address indexed token, uint256 amount, address recipient);
 
-        event LiquidityThresholdUpdated(
-        bytes32 indexed poolId,
-        uint256 oldThreshold,
-        uint256 newThreshold
-    );
+    event LiquidityThresholdUpdated(bytes32 indexed poolId, uint256 oldThreshold, uint256 newThreshold);
 
-        event SupportedTokenUpdated(address indexed token, bool supported);
+    event SupportedTokenUpdated(address indexed token, bool supported);
 
     ////////////////////
     // Constructor //
