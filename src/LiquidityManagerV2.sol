@@ -280,6 +280,16 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     // External Functions //
     ////////////////////
 
+    /**
+     * @notice Initialize a new Uniswap V4 pool with enhanced parameters
+     * @param token0 First token address
+     * @param token1 Second token address
+     * @param swapFee Pool swap fee
+     * @param tickSpacing Tick spacing for the pool
+     * @param startingPrice Initial price in Q64.96 format
+     * @param liquidityThreshold Custom threshold for this pool
+     * @param vestingDuration Custom vesting duration for this pool
+     */
         function initializePool(
         address token0,
         address token1,
