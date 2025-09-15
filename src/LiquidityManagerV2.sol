@@ -214,6 +214,13 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Modifiers //
     ////////////////////
+
+        modifier onlyFactory() {
+        if (msg.sender != factoryContract) {
+            revert LiquidityManager__UnauthorizedCaller();
+        }
+        _;
+    }
     
     ////////////////////
     // Constructor //
