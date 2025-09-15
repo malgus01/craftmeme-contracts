@@ -212,6 +212,12 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         bytes32 indexed poolId,
         uint256 withdrawTime
     );
+
+        event ProtocolFeeCollected(
+        address indexed token,
+        uint256 amount,
+        address recipient
+    );
     
     ////////////////////
     // Constructor //
