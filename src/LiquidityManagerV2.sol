@@ -221,6 +221,13 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         _;
     }
+
+    modifier validTokenPair(address token0, address token1) {
+        if (token0 == address(0) || token1 == address(0) || token0 == token1) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        _;
+    }
     
     ////////////////////
     // Constructor //
