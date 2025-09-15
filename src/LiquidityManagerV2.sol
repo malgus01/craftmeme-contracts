@@ -139,6 +139,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     }
 
     ////////////////////
+    // Mappings //
+    ////////////////////
+    
+    ////////////////////
     // Constructor //
     ////////////////////
 
