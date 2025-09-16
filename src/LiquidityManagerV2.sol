@@ -444,4 +444,88 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
         emit LiquidityAdded(msg.sender, token0, token1, poolId, amount0, amount1, liquidity, block.timestamp);
     }
+
+    /**
+     * @notice Remove liquidity from a position
+     * @param token0 First token address
+     * @param token1 Second token address
+     * @param swapFee Pool fee tier
+     * @param tickLower Lower tick boundary
+     * @param tickUpper Upper tick boundary
+     * @param liquidity Amount of liquidity to remove
+     * @param amount0Min Minimum amount of token0 to receive
+     * @param amount1Min Minimum amount of token1 to receive
+     * @param deadline Transaction deadline
+     */
+    function removeLiquidity(
+        address token0,
+        address token1,
+        uint24 swapFee,
+        int24 tickLower,
+        int24 tickUpper,
+        uint256 liquidity,
+        uint256 amount0Min,
+        uint256 amount1Min,
+        uint256 deadline
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        deadlineCheck(deadline)
+        returns (uint256 amount0, uint256 amount1)
+    {
+        if (token0 > token1) {
+            (token0, token1) = (token1, token0);
+            (amount0Min, amount1Min) = (amount1Min, amount0Min);
+            (tickLower, tickUpper) = (-tickUpper, -tickLower);
+        }
+
+        bytes32 poolId = _getPoolId(token0, token1, swapFee);
+        PoolInfo storage pool = poolInfo[poolId];
+
+        LiquidityProvider storage provider = pool.providers[msg.sender];
+
+        // Check if liquidity is locked
+        if (provider.lockEndTime > block.timestamp) {
+            revert LiquidityManager__LiquidityLocked();
+        }
+
+        // For this example, we'll calculate proportional amounts
+        // In a real implementation, you'd interact with Uniswap V4's position manager
+        amount0 = (liquidity * 1e18) / 2e18; // Simplified calculation
+        amount1 = (liquidity * 1e18) / 2e18; // Simplified calculation
+
+        if (amount0 < amount0Min || amount1 < amount1Min) {
+            revert LiquidityManager__InvalidSlippage();
+        }
+
+        // Update provider data
+        provider.amountProvided -= (amount0 + amount1);
+
+        // Transfer tokens back to user
+        IERC20(token0).safeTransfer(msg.sender, amount0);
+        IERC20(token1).safeTransfer(msg.sender, amount1);
+
+        // Update pool total liquidity
+        pool.totalLiquidity -= (amount0 + amount1);
+
+        emit LiquidityRemoved(msg.sender, token0, token1, poolId, amount0, amount1, block.timestamp);
+    }
+
+    /**
+     * @notice Initiate emergency withdrawal (with delay)
+     * @param poolId Pool identifier
+     */
+    function initiateEmergencyWithdraw(bytes32 poolId) external {
+        PoolInfo storage pool = poolInfo[poolId];
+        LiquidityProvider storage provider = pool.providers[msg.sender];
+
+        if (provider.amountProvided == 0) {
+            revert LiquidityManager__InsufficientLiquidity();
+        }
+
+        provider.emergencyWithdrawTime = block.timestamp + emergencyWithdrawDelay;
+
+        emit EmergencyWithdrawInitiated(msg.sender, poolId, provider.emergencyWithdrawTime);
+    }
 }
