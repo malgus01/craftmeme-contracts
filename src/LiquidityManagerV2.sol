@@ -275,4 +275,75 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         factoryContract = _factoryContract;
         protocolFeeRecipient = _protocolFeeRecipient;
     }
+
+    ////////////////////
+    // External Functions //
+    ////////////////////
+
+    /**
+     * @notice Initialize a new Uniswap V4 pool with enhanced parameters
+     * @param token0 First token address
+     * @param token1 Second token address
+     * @param swapFee Pool swap fee
+     * @param tickSpacing Tick spacing for the pool
+     * @param startingPrice Initial price in Q64.96 format
+     * @param liquidityThreshold Custom threshold for this pool
+     * @param vestingDuration Custom vesting duration for this pool
+     */
+        function initializePool(
+        address token0,
+        address token1,
+        uint24 swapFee,
+        int24 tickSpacing,
+        uint160 startingPrice,
+        uint256 liquidityThreshold,
+        uint256 vestingDuration
+    )
+        external
+        onlyFactory
+        validTokenPair(token0, token1)
+        whenNotPaused
+        returns (bytes32 poolId)
+    {
+        // Normalize token order
+        if (token0 > token1) {
+            (token0, token1) = (token1, token0);
+        }
+
+        poolId = _getPoolId(token0, token1, swapFee);
+        
+        if (poolInfo[poolId].initialized) {
+            revert LiquidityManager__PoolAlreadyInitialized();
+        }
+
+        // Validate parameters
+        _validatePoolParameters(swapFee, liquidityThreshold, vestingDuration);
+
+        // Create pool key
+        PoolKey memory poolKey = PoolKey({
+            currency0: Currency.wrap(token0),
+            currency1: Currency.wrap(token1),
+            fee: swapFee,
+            tickSpacing: tickSpacing,
+            hooks: IHooks(address(0))
+        });
+
+        // Initialize pool in Uniswap V4
+        poolManager.initialize(poolKey, startingPrice);
+
+        // Set up pool info
+        PoolInfo storage pool = poolInfo[poolId];
+        pool.initialized = true;
+        pool.liquidityThreshold = liquidityThreshold > 0 ? liquidityThreshold : defaultLiquidityThreshold;
+        pool.vestingDuration = vestingDuration > 0 ? vestingDuration : defaultVestingDuration;
+        pool.createdAt = block.timestamp;
+        pool.creator = tx.origin; // Get original caller from factory
+
+        // Store pool key and mapping
+        poolKeys[poolId] = poolKey;
+        tokenPairToPoolId[token0][token1] = poolId;
+        tokenPairToPoolId[token1][token0] = poolId;
+
+        emit PoolInitialized(token0, token1, poolId, swapFee, startingPrice, block.timestamp);
+    }
 }
