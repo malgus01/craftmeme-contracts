@@ -347,6 +347,19 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         emit PoolInitialized(token0, token1, poolId, swapFee, startingPrice, block.timestamp);
     }
 
+   /**
+     * @notice Add liquidity to a pool with enhanced features
+     * @param token0 First token address
+     * @param token1 Second token address
+     * @param swapFee Pool fee tier
+     * @param tickLower Lower tick boundary
+     * @param tickUpper Upper tick boundary
+     * @param amount0Desired Desired amount of token0
+     * @param amount1Desired Desired amount of token1
+     * @param amount0Min Minimum amount of token0
+     * @param amount1Min Minimum amount of token1
+     * @param deadline Transaction deadline
+     */
         function addLiquidity(
         address token0,
         address token1,
