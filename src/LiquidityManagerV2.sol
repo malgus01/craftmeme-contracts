@@ -290,7 +290,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @param liquidityThreshold Custom threshold for this pool
      * @param vestingDuration Custom vesting duration for this pool
      */
-        function initializePool(
+    function initializePool(
         address token0,
         address token1,
         uint24 swapFee,
@@ -311,7 +311,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
 
         poolId = _getPoolId(token0, token1, swapFee);
-        
+
         if (poolInfo[poolId].initialized) {
             revert LiquidityManager__PoolAlreadyInitialized();
         }
@@ -347,7 +347,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         emit PoolInitialized(token0, token1, poolId, swapFee, startingPrice, block.timestamp);
     }
 
-   /**
+    /**
      * @notice Add liquidity to a pool with enhanced features
      * @param token0 First token address
      * @param token1 Second token address
@@ -360,7 +360,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @param amount1Min Minimum amount of token1
      * @param deadline Transaction deadline
      */
-        function addLiquidity(
+    function addLiquidity(
         address token0,
         address token1,
         uint24 swapFee,
@@ -392,7 +392,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
         bytes32 poolId = _getPoolId(token0, token1, swapFee);
         PoolInfo storage pool = poolInfo[poolId];
-        
+
         if (!pool.initialized) {
             revert LiquidityManager__PoolNotInitialized();
         }
