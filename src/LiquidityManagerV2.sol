@@ -445,6 +445,18 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         emit LiquidityAdded(msg.sender, token0, token1, poolId, amount0, amount1, liquidity, block.timestamp);
     }
 
+    /**
+     * @notice Remove liquidity from a position
+     * @param token0 First token address
+     * @param token1 Second token address
+     * @param swapFee Pool fee tier
+     * @param tickLower Lower tick boundary
+     * @param tickUpper Upper tick boundary
+     * @param liquidity Amount of liquidity to remove
+     * @param amount0Min Minimum amount of token0 to receive
+     * @param amount1Min Minimum amount of token1 to receive
+     * @param deadline Transaction deadline
+     */
         function removeLiquidity(
         address token0,
         address token1,
