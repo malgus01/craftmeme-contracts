@@ -511,4 +511,17 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
         emit LiquidityRemoved(msg.sender, token0, token1, poolId, amount0, amount1, block.timestamp);
     }
+
+        function initiateEmergencyWithdraw(bytes32 poolId) external {
+        PoolInfo storage pool = poolInfo[poolId];
+        LiquidityProvider storage provider = pool.providers[msg.sender];
+        
+        if (provider.amountProvided == 0) {
+            revert LiquidityManager__InsufficientLiquidity();
+        }
+
+        provider.emergencyWithdrawTime = block.timestamp + emergencyWithdrawDelay;
+        
+        emit EmergencyWithdrawInitiated(msg.sender, poolId, provider.emergencyWithdrawTime);
+    }
 }
