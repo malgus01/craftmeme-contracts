@@ -457,7 +457,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @param amount1Min Minimum amount of token1 to receive
      * @param deadline Transaction deadline
      */
-        function removeLiquidity(
+    function removeLiquidity(
         address token0,
         address token1,
         uint24 swapFee,
@@ -482,9 +482,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
         bytes32 poolId = _getPoolId(token0, token1, swapFee);
         PoolInfo storage pool = poolInfo[poolId];
-        
+
         LiquidityProvider storage provider = pool.providers[msg.sender];
-        
+
         // Check if liquidity is locked
         if (provider.lockEndTime > block.timestamp) {
             revert LiquidityManager__LiquidityLocked();
@@ -516,16 +516,16 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @notice Initiate emergency withdrawal (with delay)
      * @param poolId Pool identifier
      */
-        function initiateEmergencyWithdraw(bytes32 poolId) external {
+    function initiateEmergencyWithdraw(bytes32 poolId) external {
         PoolInfo storage pool = poolInfo[poolId];
         LiquidityProvider storage provider = pool.providers[msg.sender];
-        
+
         if (provider.amountProvided == 0) {
             revert LiquidityManager__InsufficientLiquidity();
         }
 
         provider.emergencyWithdrawTime = block.timestamp + emergencyWithdrawDelay;
-        
+
         emit EmergencyWithdrawInitiated(msg.sender, poolId, provider.emergencyWithdrawTime);
     }
 }
