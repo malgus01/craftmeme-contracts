@@ -290,7 +290,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @param liquidityThreshold Custom threshold for this pool
      * @param vestingDuration Custom vesting duration for this pool
      */
-        function initializePool(
+    function initializePool(
         address token0,
         address token1,
         uint24 swapFee,
@@ -311,7 +311,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
 
         poolId = _getPoolId(token0, token1, swapFee);
-        
+
         if (poolInfo[poolId].initialized) {
             revert LiquidityManager__PoolAlreadyInitialized();
         }
@@ -345,5 +345,103 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         tokenPairToPoolId[token1][token0] = poolId;
 
         emit PoolInitialized(token0, token1, poolId, swapFee, startingPrice, block.timestamp);
+    }
+
+    /**
+     * @notice Add liquidity to a pool with enhanced features
+     * @param token0 First token address
+     * @param token1 Second token address
+     * @param swapFee Pool fee tier
+     * @param tickLower Lower tick boundary
+     * @param tickUpper Upper tick boundary
+     * @param amount0Desired Desired amount of token0
+     * @param amount1Desired Desired amount of token1
+     * @param amount0Min Minimum amount of token0
+     * @param amount1Min Minimum amount of token1
+     * @param deadline Transaction deadline
+     */
+    function addLiquidity(
+        address token0,
+        address token1,
+        uint24 swapFee,
+        int24 tickLower,
+        int24 tickUpper,
+        uint256 amount0Desired,
+        uint256 amount1Desired,
+        uint256 amount0Min,
+        uint256 amount1Min,
+        uint256 deadline
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        validTokenPair(token0, token1)
+        onlySupportedTokens(token0, token1)
+        validAmount(amount0Desired)
+        validAmount(amount1Desired)
+        deadlineCheck(deadline)
+        returns (uint256 amount0, uint256 amount1, uint256 liquidity)
+    {
+        // Normalize token order
+        if (token0 > token1) {
+            (token0, token1) = (token1, token0);
+            (amount0Desired, amount1Desired) = (amount1Desired, amount0Desired);
+            (amount0Min, amount1Min) = (amount1Min, amount0Min);
+            (tickLower, tickUpper) = (-tickUpper, -tickLower);
+        }
+
+        bytes32 poolId = _getPoolId(token0, token1, swapFee);
+        PoolInfo storage pool = poolInfo[poolId];
+
+        if (!pool.initialized) {
+            revert LiquidityManager__PoolNotInitialized();
+        }
+
+        if (pool.emergencyMode) {
+            revert LiquidityManager__LiquidityLocked();
+        }
+
+        // Validate tick range
+        if (tickLower >= tickUpper) {
+            revert LiquidityManager__InvalidTickRange();
+        }
+
+        // Transfer tokens from user
+        IERC20(token0).safeTransferFrom(msg.sender, address(this), amount0Desired);
+        IERC20(token1).safeTransferFrom(msg.sender, address(this), amount1Desired);
+
+        // Calculate protocol fee
+        uint256 protocolFee0 = (amount0Desired * protocolFee) / FEE_PRECISION;
+        uint256 protocolFee1 = (amount1Desired * protocolFee) / FEE_PRECISION;
+
+        // Collect protocol fees
+        if (protocolFee0 > 0) {
+            IERC20(token0).safeTransfer(protocolFeeRecipient, protocolFee0);
+            emit ProtocolFeeCollected(token0, protocolFee0, protocolFeeRecipient);
+        }
+        if (protocolFee1 > 0) {
+            IERC20(token1).safeTransfer(protocolFeeRecipient, protocolFee1);
+            emit ProtocolFeeCollected(token1, protocolFee1, protocolFeeRecipient);
+        }
+
+        // Adjust amounts after fee
+        amount0 = amount0Desired - protocolFee0;
+        amount1 = amount1Desired - protocolFee1;
+
+        // Validate minimum amounts
+        if (amount0 < amount0Min || amount1 < amount1Min) {
+            revert LiquidityManager__InvalidSlippage();
+        }
+
+        // Calculate liquidity (simplified calculation)
+        liquidity = _calculateLiquidity(amount0, amount1);
+
+        // Update provider data
+        _updateLiquidityProvider(poolId, msg.sender, amount0 + amount1, liquidity);
+
+        // Create position record
+        _createPosition(msg.sender, token0, token1, swapFee, tickLower, tickUpper, liquidity, amount0, amount1);
+
+        emit LiquidityAdded(msg.sender, token0, token1, poolId, amount0, amount1, liquidity, block.timestamp);
     }
 }
