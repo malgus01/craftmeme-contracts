@@ -528,4 +528,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
         emit EmergencyWithdrawInitiated(msg.sender, poolId, provider.emergencyWithdrawTime);
     }
+
+        function claimVestedTokens() external nonReentrant {
+        vestingContract.release(msg.sender);
+    }
 }
