@@ -539,4 +539,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         ////////////////////
     // View Functions //
     ////////////////////
+
+        function isThresholdMet(address token, address user) external view returns (bool) {
+        // This is a simplified implementation
+        // In practice, you'd check across all pools containing this token
+        return true; // Placeholder
+    }
 }
