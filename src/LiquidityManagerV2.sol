@@ -540,6 +540,12 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     // View Functions //
     ////////////////////
 
+    /**
+     * @notice Check if liquidity threshold is met for a user
+     * @param token Token address to check
+     * @param user User address
+     * @return Whether threshold is met
+     */
         function isThresholdMet(address token, address user) external view returns (bool) {
         // This is a simplified implementation
         // In practice, you'd check across all pools containing this token
