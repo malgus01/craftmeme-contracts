@@ -551,4 +551,21 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         // In practice, you'd check across all pools containing this token
         return true; // Placeholder
     }
+
+        function getPoolInfo(bytes32 poolId) external view returns (
+        bool initialized,
+        uint256 totalLiquidity,
+        uint256 liquidityThreshold,
+        uint256 vestingDuration,
+        uint256 providersCount
+    ) {
+        PoolInfo storage pool = poolInfo[poolId];
+        return (
+            pool.initialized,
+            pool.totalLiquidity,
+            pool.liquidityThreshold,
+            pool.vestingDuration,
+            pool.providersCount
+        );
+    }
 }
