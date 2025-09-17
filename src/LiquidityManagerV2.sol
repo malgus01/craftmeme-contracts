@@ -535,4 +535,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         function claimVestedTokens() external nonReentrant {
         vestingContract.release(msg.sender);
     }
+
+        ////////////////////
+    // View Functions //
+    ////////////////////
 }
