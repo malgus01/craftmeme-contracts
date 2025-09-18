@@ -586,4 +586,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         function getLiquidityProvider(bytes32 poolId, address provider) external view returns (LiquidityProvider memory) {
         return poolInfo[poolId].providers[provider];
     }
+
+        function getUserPositions(address user) external view returns (LiquidityPosition[] memory) {
+        return userPositions[user];
+    }
 }
