@@ -609,4 +609,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         supportedTokens[token] = supported;
         emit SupportedTokenUpdated(token, supported);
     }
+
+        function updateProtocolFee(uint256 newFee) external onlyOwner {
+        require(newFee <= 1000, "Fee too high"); // Max 10%
+        protocolFee = newFee;
+    }
 }
