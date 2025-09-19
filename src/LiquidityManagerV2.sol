@@ -595,4 +595,38 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     function getUserPositions(address user) external view returns (LiquidityPosition[] memory) {
         return userPositions[user];
     }
+
+    ////////////////////
+    // Admin Functions //
+    ////////////////////
+
+    /**
+     * @notice Update supported token status
+     * @param token Token address
+     * @param supported Whether token is supported
+     */
+    function updateSupportedToken(address token, bool supported) external onlyOwner {
+        supportedTokens[token] = supported;
+        emit SupportedTokenUpdated(token, supported);
+    }
+
+    /**
+     * @notice Update protocol fee
+     * @param newFee New protocol fee (in basis points)
+     */
+    function updateProtocolFee(uint256 newFee) external onlyOwner {
+        require(newFee <= 1000, "Fee too high"); // Max 10%
+        protocolFee = newFee;
+    }
+
+    /**
+     * @notice Update protocol fee recipient
+     * @param newRecipient New fee recipient
+     */
+    function updateProtocolFeeRecipient(address newRecipient) external onlyOwner {
+        if (newRecipient == address(0)) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        protocolFeeRecipient = newRecipient;
+    }
 }
