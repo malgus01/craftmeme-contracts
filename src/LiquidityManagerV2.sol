@@ -605,7 +605,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @param token Token address
      * @param supported Whether token is supported
      */
-        function updateSupportedToken(address token, bool supported) external onlyOwner {
+    function updateSupportedToken(address token, bool supported) external onlyOwner {
         supportedTokens[token] = supported;
         emit SupportedTokenUpdated(token, supported);
     }
@@ -614,7 +614,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @notice Update protocol fee
      * @param newFee New protocol fee (in basis points)
      */
-        function updateProtocolFee(uint256 newFee) external onlyOwner {
+    function updateProtocolFee(uint256 newFee) external onlyOwner {
         require(newFee <= 1000, "Fee too high"); // Max 10%
         protocolFee = newFee;
     }
