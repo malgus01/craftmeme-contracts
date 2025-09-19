@@ -619,6 +619,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         protocolFee = newFee;
     }
 
+    /**
+     * @notice Update protocol fee recipient
+     * @param newRecipient New fee recipient
+     */
     function updateProtocolFeeRecipient(address newRecipient) external onlyOwner {
         if (newRecipient == address(0)) {
             revert LiquidityManager__InvalidTokenAddress();
