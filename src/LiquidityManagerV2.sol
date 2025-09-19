@@ -595,4 +595,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     function getUserPositions(address user) external view returns (LiquidityPosition[] memory) {
         return userPositions[user];
     }
+
+    ////////////////////
+    // Admin Functions //
+    ////////////////////
 }
