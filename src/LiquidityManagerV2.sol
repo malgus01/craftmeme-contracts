@@ -600,6 +600,11 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     // Admin Functions //
     ////////////////////
 
+    /**
+     * @notice Update supported token status
+     * @param token Token address
+     * @param supported Whether token is supported
+     */
         function updateSupportedToken(address token, bool supported) external onlyOwner {
         supportedTokens[token] = supported;
         emit SupportedTokenUpdated(token, supported);
