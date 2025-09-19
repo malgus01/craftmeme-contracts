@@ -618,4 +618,11 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         require(newFee <= 1000, "Fee too high"); // Max 10%
         protocolFee = newFee;
     }
+
+    function updateProtocolFeeRecipient(address newRecipient) external onlyOwner {
+        if (newRecipient == address(0)) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        protocolFeeRecipient = newRecipient;
+    }
 }
