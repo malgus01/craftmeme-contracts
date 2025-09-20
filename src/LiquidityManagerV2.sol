@@ -659,10 +659,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         _pause();
     }
 
-       
-           /**
+    /**
      * @notice Unpause the contract
-     */ function unpause() external onlyOwner {
+     */
+    function unpause() external onlyOwner {
         _unpause();
     }
 
@@ -670,7 +670,7 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      * @notice Enable emergency mode for a pool
      * @param poolId Pool identifier
      */
-        function enableEmergencyMode(bytes32 poolId) external onlyOwner {
+    function enableEmergencyMode(bytes32 poolId) external onlyOwner {
         poolInfo[poolId].emergencyMode = true;
     }
 }
