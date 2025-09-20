@@ -641,6 +641,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         vestingContract = VestingContract(newVestingContract);
     }
 
+    /**
+     * @notice Update factory contract
+     * @param newFactory New factory contract address
+     */
     function updateFactoryContract(address newFactory) external onlyOwner {
         if (newFactory == address(0)) {
             revert LiquidityManager__InvalidTokenAddress();
