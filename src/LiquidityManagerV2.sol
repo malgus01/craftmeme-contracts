@@ -629,4 +629,11 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         protocolFeeRecipient = newRecipient;
     }
+
+    function updateVestingContract(address newVestingContract) external onlyOwner {
+        if (newVestingContract == address(0)) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        vestingContract = VestingContract(newVestingContract);
+    }
 }
