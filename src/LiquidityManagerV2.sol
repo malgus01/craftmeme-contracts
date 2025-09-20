@@ -651,4 +651,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         factoryContract = newFactory;
     }
+
+    function pause() external onlyOwner {
+        _pause();
+    }
 }
