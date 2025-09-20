@@ -659,7 +659,10 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         _pause();
     }
 
-        function unpause() external onlyOwner {
+       
+           /**
+     * @notice Unpause the contract
+     */ function unpause() external onlyOwner {
         _unpause();
     }
 }
