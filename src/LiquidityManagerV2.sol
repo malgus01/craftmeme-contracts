@@ -678,6 +678,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     // Internal Functions //
     ////////////////////
 
+    /**
+     * @notice Generate pool ID from token addresses and fee
+     */
         function _getPoolId(address token0, address token1, uint24 fee) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(token0, token1, fee));
     }
