@@ -673,4 +673,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     function enableEmergencyMode(bytes32 poolId) external onlyOwner {
         poolInfo[poolId].emergencyMode = true;
     }
+
+    ////////////////////
+    // Internal Functions //
+    ////////////////////
 }
