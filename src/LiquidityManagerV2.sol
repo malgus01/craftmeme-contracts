@@ -681,18 +681,28 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     /**
      * @notice Generate pool ID from token addresses and fee
      */
-        function _getPoolId(address token0, address token1, uint24 fee) internal pure returns (bytes32) {
+    function _getPoolId(address token0, address token1, uint24 fee) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(token0, token1, fee));
     }
 
     /**
      * @notice Validate pool initialization parameters
      */
-        function _validatePoolParameters(uint24 swapFee, uint256 liquidityThreshold, uint256 vestingDuration) internal pure {
-        if (swapFee != 100 && swapFee != 500 && swapFee != 3000 && swapFee != 10000) {
+    function _validatePoolParameters(
+        uint24 swapFee,
+        uint256 liquidityThreshold,
+        uint256 vestingDuration
+    )
+        internal
+        pure
+    {
+        if (swapFee != 100 && swapFee != 500 && swapFee != 3000 && swapFee != 10_000) {
             revert LiquidityManager__InvalidSwapFee();
         }
-        if (liquidityThreshold > 0 && (liquidityThreshold < MIN_LIQUIDITY_THRESHOLD || liquidityThreshold > MAX_LIQUIDITY_THRESHOLD)) {
+        if (
+            liquidityThreshold > 0
+                && (liquidityThreshold < MIN_LIQUIDITY_THRESHOLD || liquidityThreshold > MAX_LIQUIDITY_THRESHOLD)
+        ) {
             revert LiquidityManager__InsufficientLiquidity();
         }
         if (vestingDuration > 0 && (vestingDuration < MIN_VESTING_DURATION || vestingDuration > MAX_VESTING_DURATION)) {
