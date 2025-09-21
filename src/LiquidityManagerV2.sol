@@ -629,4 +629,84 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
         protocolFeeRecipient = newRecipient;
     }
+
+    /**
+     * @notice Update vesting contract
+     * @param newVestingContract New vesting contract address
+     */
+    function updateVestingContract(address newVestingContract) external onlyOwner {
+        if (newVestingContract == address(0)) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        vestingContract = VestingContract(newVestingContract);
+    }
+
+    /**
+     * @notice Update factory contract
+     * @param newFactory New factory contract address
+     */
+    function updateFactoryContract(address newFactory) external onlyOwner {
+        if (newFactory == address(0)) {
+            revert LiquidityManager__InvalidTokenAddress();
+        }
+        factoryContract = newFactory;
+    }
+
+    /**
+     * @notice Pause the contract
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @notice Unpause the contract
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    /**
+     * @notice Enable emergency mode for a pool
+     * @param poolId Pool identifier
+     */
+    function enableEmergencyMode(bytes32 poolId) external onlyOwner {
+        poolInfo[poolId].emergencyMode = true;
+    }
+
+    ////////////////////
+    // Internal Functions //
+    ////////////////////
+
+    /**
+     * @notice Generate pool ID from token addresses and fee
+     */
+    function _getPoolId(address token0, address token1, uint24 fee) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(token0, token1, fee));
+    }
+
+    /**
+     * @notice Validate pool initialization parameters
+     */
+    function _validatePoolParameters(
+        uint24 swapFee,
+        uint256 liquidityThreshold,
+        uint256 vestingDuration
+    )
+        internal
+        pure
+    {
+        if (swapFee != 100 && swapFee != 500 && swapFee != 3000 && swapFee != 10_000) {
+            revert LiquidityManager__InvalidSwapFee();
+        }
+        if (
+            liquidityThreshold > 0
+                && (liquidityThreshold < MIN_LIQUIDITY_THRESHOLD || liquidityThreshold > MAX_LIQUIDITY_THRESHOLD)
+        ) {
+            revert LiquidityManager__InsufficientLiquidity();
+        }
+        if (vestingDuration > 0 && (vestingDuration < MIN_VESTING_DURATION || vestingDuration > MAX_VESTING_DURATION)) {
+            revert LiquidityManager__InvalidAmount();
+        }
+    }
 }
