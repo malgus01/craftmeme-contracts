@@ -685,6 +685,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         return keccak256(abi.encodePacked(token0, token1, fee));
     }
 
+    /**
+     * @notice Validate pool initialization parameters
+     */
         function _validatePoolParameters(uint24 swapFee, uint256 liquidityThreshold, uint256 vestingDuration) internal pure {
         if (swapFee != 100 && swapFee != 500 && swapFee != 3000 && swapFee != 10000) {
             revert LiquidityManager__InvalidSwapFee();
