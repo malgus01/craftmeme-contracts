@@ -718,7 +718,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         address provider,
         uint256 totalAmount,
         uint256 liquidity
-    ) internal {
+    )
+        internal
+    {
         PoolInfo storage pool = poolInfo[poolId];
         LiquidityProvider storage lpData = pool.providers[provider];
 
@@ -737,12 +739,12 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
             _setupVesting(poolId, provider, lpData.amountProvided);
             lpData.hasVested = true;
             lpData.lockEndTime = block.timestamp + pool.vestingDuration;
-            
+
             emit LiquidityThresholdReached(
-                address(poolKeys[poolId].currency0), 
-                address(poolKeys[poolId].currency1), 
-                poolId, 
-                pool.totalLiquidity, 
+                address(poolKeys[poolId].currency0),
+                address(poolKeys[poolId].currency1),
+                poolId,
+                pool.totalLiquidity,
                 block.timestamp
             );
         }
@@ -754,14 +756,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
     function _setupVesting(bytes32 poolId, address provider, uint256 amount) internal {
         PoolInfo storage pool = poolInfo[poolId];
         address token = address(poolKeys[poolId].currency0); // Use token0 for vesting
-        
-        vestingContract.setVestingSchedule(
-            provider,
-            token,
-            block.timestamp,
-            pool.vestingDuration,
-            amount
-        );
+
+        vestingContract.setVestingSchedule(provider, token, block.timestamp, pool.vestingDuration, amount);
 
         emit VestingScheduleCreated(provider, token, amount, pool.vestingDuration, block.timestamp);
     }
