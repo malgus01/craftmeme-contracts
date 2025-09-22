@@ -710,6 +710,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
     }
 
+    /**
+     * @notice Update liquidity provider data
+     */
     function _updateLiquidityProvider(
         bytes32 poolId,
         address provider,
