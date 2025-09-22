@@ -709,4 +709,39 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
             revert LiquidityManager__InvalidAmount();
         }
     }
+
+    function _updateLiquidityProvider(
+        bytes32 poolId,
+        address provider,
+        uint256 totalAmount,
+        uint256 liquidity
+    ) internal {
+        PoolInfo storage pool = poolInfo[poolId];
+        LiquidityProvider storage lpData = pool.providers[provider];
+
+        // If first time provider, add to list
+        if (lpData.amountProvided == 0) {
+            pool.providersList.push(provider);
+            pool.providersCount++;
+        }
+
+        lpData.amountProvided += totalAmount;
+        lpData.lastContribution = block.timestamp;
+        pool.totalLiquidity += totalAmount;
+
+        // Check threshold and set up vesting
+        if (!lpData.hasVested && lpData.amountProvided >= pool.liquidityThreshold) {
+            _setupVesting(poolId, provider, lpData.amountProvided);
+            lpData.hasVested = true;
+            lpData.lockEndTime = block.timestamp + pool.vestingDuration;
+            
+            emit LiquidityThresholdReached(
+                address(poolKeys[poolId].currency0), 
+                address(poolKeys[poolId].currency1), 
+                poolId, 
+                pool.totalLiquidity, 
+                block.timestamp
+            );
+        }
+    }
 }
