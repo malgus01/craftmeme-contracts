@@ -748,6 +748,9 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
         }
     }
 
+    /**
+     * @notice Set up vesting schedule for liquidity provider
+     */
     function _setupVesting(bytes32 poolId, address provider, uint256 amount) internal {
         PoolInfo storage pool = poolInfo[poolId];
         address token = address(poolKeys[poolId].currency0); // Use token0 for vesting
