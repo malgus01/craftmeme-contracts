@@ -761,4 +761,29 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
 
         emit VestingScheduleCreated(provider, token, amount, pool.vestingDuration, block.timestamp);
     }
+
+    function _createPosition(
+        address user,
+        address token0,
+        address token1,
+        uint24 fee,
+        int24 tickLower,
+        int24 tickUpper,
+        uint256 liquidity,
+        uint256 amount0,
+        uint256 amount1
+    ) internal {
+        userPositions[user].push(LiquidityPosition({
+            token0: token0,
+            token1: token1,
+            fee: fee,
+            tickLower: tickLower,
+            tickUpper: tickUpper,
+            liquidity: liquidity,
+            token0Amount: amount0,
+            token1Amount: amount1,
+            timestamp: block.timestamp,
+            active: true
+        }));
+    }
 }
