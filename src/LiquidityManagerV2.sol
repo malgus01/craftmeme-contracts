@@ -741,8 +741,8 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
             lpData.lockEndTime = block.timestamp + pool.vestingDuration;
 
             emit LiquidityThresholdReached(
-                address(poolKeys[poolId].currency0),
-                address(poolKeys[poolId].currency1),
+                Currency.unwrap(poolKeys[poolId].currency0),
+                Currency.unwrap(poolKeys[poolId].currency1),
                 poolId,
                 pool.totalLiquidity,
                 block.timestamp
@@ -755,10 +755,48 @@ contract LiquidityManagerV2 is Ownable, ReentrancyGuard, Pausable {
      */
     function _setupVesting(bytes32 poolId, address provider, uint256 amount) internal {
         PoolInfo storage pool = poolInfo[poolId];
-        address token = address(poolKeys[poolId].currency0); // Use token0 for vesting
+        address token = Currency.unwrap(poolKeys[poolId].currency0); // Use token0 for vesting
 
         vestingContract.setVestingSchedule(provider, token, block.timestamp, pool.vestingDuration, amount);
 
         emit VestingScheduleCreated(provider, token, amount, pool.vestingDuration, block.timestamp);
+    }
+
+    /**
+     * @notice Create a position record
+     */
+    function _createPosition(
+        address user,
+        address token0,
+        address token1,
+        uint24 fee,
+        int24 tickLower,
+        int24 tickUpper,
+        uint256 liquidity,
+        uint256 amount0,
+        uint256 amount1
+    )
+        internal
+    {
+        userPositions[user].push(
+            LiquidityPosition({
+                token0: token0,
+                token1: token1,
+                fee: fee,
+                tickLower: tickLower,
+                tickUpper: tickUpper,
+                liquidity: liquidity,
+                token0Amount: amount0,
+                token1Amount: amount1,
+                timestamp: block.timestamp,
+                active: true
+            })
+        );
+    }
+
+    function _calculateLiquidity(uint256 amount0, uint256 amount1) internal pure returns (uint256) {
+        // Simplified liquidity calculation
+        // In practice, this would use Uniswap V4's math libraries
+        return (amount0 + amount1) / 2;
     }
 }
