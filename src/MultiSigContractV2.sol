@@ -20,4 +20,7 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Custom Errors //
     //////////////////
+
+        error MultiSigContract__OnlyFactoryTokenContract();
+
 }
