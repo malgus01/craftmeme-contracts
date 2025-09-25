@@ -16,4 +16,8 @@ import { DataLocation } from "@signprotocol/signprotocol-evm/src/models/DataLoca
  * @notice Enhanced multisig contract with comprehensive security features and governance
  * @dev Includes timelock, emergency functions, role management, and advanced attestation features
  */
-contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable { }
+contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable { 
+    ////////////////////
+    // Custom Errors //
+    //////////////////
+}
