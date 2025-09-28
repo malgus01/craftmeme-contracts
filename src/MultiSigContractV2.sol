@@ -47,4 +47,30 @@ error MultiSigContract__InvalidThreshold();
 
     /// @notice Sign Protocol instance
     ISP public spInstance;
+
+    ////////////////////
+    // Constructor //
+    ////////////////////
+    
+    constructor(
+        address _spInstance,
+        uint64 _signatureSchemaId,
+        uint64 _revocationSchemaId,
+        uint64 _executionSchemaId,
+        address _emergencyAdmin,
+        address _initialOwner
+    ) Ownable(_initialOwner) {
+        if (_spInstance == address(0) || _emergencyAdmin == address(0)) {
+            revert MultiSigContract__InvalidAddress();
+        }
+
+        spInstance = ISP(_spInstance);
+        signatureSchemaId = _signatureSchemaId;
+        revocationSchemaId = _revocationSchemaId;
+        executionSchemaId = _executionSchemaId;
+        emergencyAdmin = _emergencyAdmin;
+        
+        // Add owner as initial signer with admin role
+        _addSigner(_initialOwner, "admin");
+    }
 }
