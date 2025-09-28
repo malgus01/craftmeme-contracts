@@ -36,4 +36,6 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     error MultiSigContract__TimelockActive();
     error MultiSigContract__EmergencyModeActive();
 error MultiSigContract__InvalidThreshold();
+    error MultiSigContract__DuplicateSigner();
+
 }
