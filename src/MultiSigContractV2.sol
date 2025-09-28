@@ -61,6 +61,9 @@ error MultiSigContract__InvalidThreshold();
 
     /// @notice Emergency mode status
     bool public emergencyMode;
+
+    /// @notice Emergency admin (can pause/unpause in emergencies)
+    address public emergencyAdmin;
     
     ////////////////////
     // Constructor //
