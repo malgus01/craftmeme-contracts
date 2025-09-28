@@ -41,4 +41,7 @@ error MultiSigContract__InvalidThreshold();
     ////////////////////
     // Constants //
     //////////////////
+
+    /// @notice Factory token contract reference
+    FactoryTokenContract public factoryTokenContract;
 }
