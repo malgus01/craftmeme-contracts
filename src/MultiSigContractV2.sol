@@ -33,4 +33,6 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     error MultiSigContract__SignerNotFound();
     error MultiSigContract__InsufficientSignatures();
     error MultiSigContract__InvalidAddress();
+    error MultiSigContract__TimelockActive();
+
 }
