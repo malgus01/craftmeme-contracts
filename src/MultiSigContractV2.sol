@@ -55,6 +55,12 @@ error MultiSigContract__InvalidThreshold();
 
     /// @notice Global signature threshold (percentage * 100, e.g., 6000 = 60%)
     uint256 public signatureThreshold = 6000; // 60% by default
+
+    /// @notice Transaction expiry duration
+    //uint256 public transactionExpiry = DEFAULT_TX_EXPIRY;
+
+    /// @notice Emergency mode status
+    bool public emergencyMode;
     
     ////////////////////
     // Constructor //
