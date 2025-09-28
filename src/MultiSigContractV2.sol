@@ -35,7 +35,7 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     error MultiSigContract__InvalidAddress();
     error MultiSigContract__TimelockActive();
     error MultiSigContract__EmergencyModeActive();
-error MultiSigContract__InvalidThreshold();
+    error MultiSigContract__InvalidThreshold();
     error MultiSigContract__DuplicateSigner();
 
     ////////////////////
@@ -64,11 +64,11 @@ error MultiSigContract__InvalidThreshold();
 
     /// @notice Emergency admin (can pause/unpause in emergencies)
     address public emergencyAdmin;
-    
+
     ////////////////////
     // Constructor //
     ////////////////////
-    
+
     constructor(
         address _spInstance,
         uint64 _signatureSchemaId,
@@ -76,7 +76,9 @@ error MultiSigContract__InvalidThreshold();
         uint64 _executionSchemaId,
         address _emergencyAdmin,
         address _initialOwner
-    ) Ownable(_initialOwner) {
+    )
+        Ownable(_initialOwner)
+    {
         if (_spInstance == address(0) || _emergencyAdmin == address(0)) {
             revert MultiSigContract__InvalidAddress();
         }
@@ -86,8 +88,8 @@ error MultiSigContract__InvalidThreshold();
         revocationSchemaId = _revocationSchemaId;
         executionSchemaId = _executionSchemaId;
         emergencyAdmin = _emergencyAdmin;
-        
+
         // Add owner as initial signer with admin role
-        _addSigner(_initialOwner, "admin");
+        //_addSigner(_initialOwner, "admin");
     }
 }
