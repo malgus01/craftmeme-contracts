@@ -48,6 +48,11 @@ error MultiSigContract__InvalidThreshold();
     /// @notice Sign Protocol instance
     ISP public spInstance;
 
+    /// @notice Schema IDs for different attestation types
+    uint64 public signatureSchemaId;
+    uint64 public revocationSchemaId;
+    uint64 public executionSchemaId;
+    
     ////////////////////
     // Constructor //
     ////////////////////
