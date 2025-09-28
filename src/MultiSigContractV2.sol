@@ -52,6 +52,9 @@ error MultiSigContract__InvalidThreshold();
     uint64 public signatureSchemaId;
     uint64 public revocationSchemaId;
     uint64 public executionSchemaId;
+
+    /// @notice Global signature threshold (percentage * 100, e.g., 6000 = 60%)
+    uint256 public signatureThreshold = 6000; // 60% by default
     
     ////////////////////
     // Constructor //
