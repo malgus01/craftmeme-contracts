@@ -44,4 +44,7 @@ error MultiSigContract__InvalidThreshold();
 
     /// @notice Factory token contract reference
     FactoryTokenContract public factoryTokenContract;
+
+    /// @notice Sign Protocol instance
+    ISP public spInstance;
 }
