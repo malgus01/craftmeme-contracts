@@ -41,11 +41,12 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Constants //
     //////////////////
-
+   uint256 public constant MAX_SIGNERS = 20;
+   
     ////////////////////
     // State Variables //
     ////////////////////
-    
+
     /// @notice Factory token contract reference
     FactoryTokenContract public factoryTokenContract;
 
