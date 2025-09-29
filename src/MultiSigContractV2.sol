@@ -41,13 +41,12 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     ////////////////////
     // Constants //
     //////////////////
-   uint256 public constant MAX_SIGNERS = 20;
-       uint256 public constant MIN_SIGNERS = 2;
+    uint256 public constant MAX_SIGNERS = 20;
+    uint256 public constant MIN_SIGNERS = 2;
     uint256 public constant MAX_SIGNATURE_THRESHOLD = 100; // 100%
     uint256 public constant DEFAULT_TX_EXPIRY = 7 days;
     uint256 public constant TIMELOCK_DURATION = 2 days;
     uint256 public constant EMERGENCY_TIMELOCK = 24 hours;
-
 
     ////////////////////
     // State Variables //
