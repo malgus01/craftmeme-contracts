@@ -78,7 +78,7 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Timelock for critical operations
     uint256 public timelockDelay = TIMELOCK_DURATION;
 
-        /**
+    /**
      * @notice Enhanced transaction data structure
      */
     struct TransactionData {
