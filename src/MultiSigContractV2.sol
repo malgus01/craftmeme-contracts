@@ -75,6 +75,27 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Emergency admin (can pause/unpause in emergencies)
     address public emergencyAdmin;
 
+    /// @notice Timelock for critical operations
+    uint256 public timelockDelay = TIMELOCK_DURATION;
+
+    /**
+     * @notice Enhanced transaction data structure
+     */
+    struct TransactionData {
+        uint256 txId;
+        address owner;
+        EnumerableSet.AddressSet signers;
+        EnumerableSet.AddressSet signatures;
+        uint256 requiredSignatures;
+        uint256 createdAt;
+        uint256 expiresAt;
+        uint256 executedAt;
+        bool executed;
+        bool cancelled;
+        string description;
+        bytes data;
+        uint256 timelockEnd;
+    }
     ////////////////////
     // Constructor //
     ////////////////////
