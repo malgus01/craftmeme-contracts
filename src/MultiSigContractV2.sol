@@ -75,6 +75,9 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Emergency admin (can pause/unpause in emergencies)
     address public emergencyAdmin;
 
+    /// @notice Timelock for critical operations
+    uint256 public timelockDelay = TIMELOCK_DURATION;
+
     ////////////////////
     // Constructor //
     ////////////////////
