@@ -108,6 +108,7 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
         string role;
         uint256 reputation;
     }
+
     ////////////////////
     // Constructor //
     ////////////////////
