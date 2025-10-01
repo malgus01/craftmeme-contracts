@@ -96,6 +96,19 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
         bytes data;
         uint256 timelockEnd;
     }
+
+    /**
+     * @notice Signer information structure
+     */
+    struct SignerInfo {
+        bool active;
+        uint256 addedAt;
+        uint256 lastSignedAt;
+        uint256 totalSigned;
+        string role;
+        uint256 reputation;
+    }
+
     ////////////////////
     // Constructor //
     ////////////////////
