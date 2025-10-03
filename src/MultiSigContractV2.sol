@@ -109,6 +109,19 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
         uint256 reputation;
     }
 
+    /**
+     * @notice Timelock operation structure
+     */
+    struct TimelockOperation {
+        bytes32 id;
+        address target;
+        bytes data;
+        uint256 executeTime;
+        bool executed;
+        bool cancelled;
+        string description;
+    }
+    
     ////////////////////
     // Constructor //
     ////////////////////
