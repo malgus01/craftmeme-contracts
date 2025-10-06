@@ -125,7 +125,8 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
         ////////////////////
     // Storage //
     ////////////////////
-    
+        mapping(uint256 => TransactionData) private transactions;
+        
     ////////////////////
     // Constructor //
     ////////////////////
