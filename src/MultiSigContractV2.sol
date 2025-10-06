@@ -121,6 +121,10 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
         bool cancelled;
         string description;
     }
+
+        ////////////////////
+    // Storage //
+    ////////////////////
     
     ////////////////////
     // Constructor //
