@@ -133,6 +133,10 @@ contract MultiSigContractV2 is Ownable, ReentrancyGuard, Pausable {
     /// @notice Signer management
     mapping(address => SignerInfo) public signerInfo;
     EnumerableSet.AddressSet private activeSigners;
+
+        /// @notice Attestation tracking
+    mapping(address => mapping(uint256 => uint64)) public signerToAttestationId;
+    mapping(uint256 => uint64[]) public transactionAttestations;
     
     ////////////////////
     // Constructor //
